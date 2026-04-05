@@ -1,80 +1,59 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function FormPage() {
-  const router = useRouter();
   const [name, setName] = useState("");
   const [location, setLocation] = useState("");
-  const isValid = (value: string) => /^[A-Za-z\s]+$/.test(value);
 
   return (
-    <div className="flex min-h-screen items-center justify-center">
-      <div className="flex flex-col gap-4 w-80">
-        <h1 className="text-2xl font-bold text-center">Enter Your Info</h1>
+    <div className="w-full h-[calc(100vh-64px)] bg-white relative flex items-center justify-center">
 
+      {/* BACK BUTTON */}
+      <div className="absolute top-[32px] left-[32px] text-[12px] tracking-[0.08em] cursor-pointer">
+        ← BACK
+      </div>
+
+      {/* CENTER CONTENT */}
+      <div className="flex flex-col items-center gap-6 w-full max-w-[400px] px-6">
+
+        <h1 className="text-[32px] tracking-[-0.02em]">
+          Enter your details
+        </h1>
+
+        {/* NAME INPUT */}
         <input
           type="text"
           placeholder="Name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="border p-2 rounded"
+          className="
+            w-full border-b border-[#1A1B1C]
+            py-3 outline-none
+            text-[16px]
+          "
         />
 
+        {/* LOCATION INPUT */}
         <input
           type="text"
-          placeholder="Location"
+          placeholder="City"
           value={location}
           onChange={(e) => setLocation(e.target.value)}
-          className="border p-2 rounded"
+          className="
+            w-full border-b border-[#1A1B1C]
+            py-3 outline-none
+            text-[16px]
+          "
         />
 
-        <button
-          onClick={async () => {
-            if (!name || !location) {
-              alert("Please fill in all fields");
-              return;
-            }
-
-            if (!isValid(name) || !isValid(location)) {
-              alert("Only letters allowed");
-              return;
-            }
-
-            try {
-                const res = await fetch(
-                    "https://us-central1-api-skinstric-ai.cloudfunctions.net/skinstricPhaseOne",
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({ name, location }),
-                    }
-                );
-
-                const data = await res.json();
-                console.log("API response", data);
-
-                // Save locally
-                localStorage.setItem(
-                    "user",
-                    JSON.stringify({ name, location })
-                );
-            
-                router.push("/upload");
-
-            } catch (error) {
-                console.error("API error:", error);
-                alert("Something went wrong. Try again.");
-            }
-          }}
-          className="bg-blue-500 text-white py-2 rounded"
-        >
-          Continue
-        </button>
       </div>
+
+      {/* CTA (we’ll animate later) */}
+      <div className="absolute bottom-[32px] right-[32px] text-[12px] tracking-[0.08em] opacity-30">
+        NEXT →
+      </div>
+
     </div>
   );
 }
