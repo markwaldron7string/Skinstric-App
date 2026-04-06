@@ -40,6 +40,8 @@ export default function Home() {
               strokeLinecap="round"
             />
           </svg>
+
+          
         </div>
 
         {/* RIGHT */}

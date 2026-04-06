@@ -53,6 +53,7 @@ export default function RootLayout({
               [ INTRO ] 
             </span>
           </div>
+          
 
           {/* RIGHT BUTTON */}
           <button className="
@@ -62,6 +63,7 @@ export default function RootLayout({
             ENTER CODE
           </button>
         </header>
+        
 
         {/* PAGE CONTENT */}
         <main className="flex-1">{children}</main>
