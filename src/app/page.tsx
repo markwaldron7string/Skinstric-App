@@ -85,7 +85,7 @@ export default function Home() {
         `}
       >
         <h1
-          className="text-center opacity-0 animate-fadeIn"
+          className="text-center opacity-0 animate-fadeIn cursor-default"
           style={{
             fontSize: "clamp(56px, 8vw, 128px)",
             lineHeight: "0.92",

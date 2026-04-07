@@ -13,9 +13,9 @@ export default function UploadPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [image, setImage] = useState<string | null>(null);
-  const [cameraStep, setCameraStep] = useState<"idle" | "confirm" | "camera">(
-    "idle",
-  );
+  const [cameraStep, setCameraStep] = useState<
+    "idle" | "confirm" | "loading" | "camera"
+  >("idle");
 
   const capture = () => {
     const imageSrc = webcamRef.current?.getScreenshot();
@@ -68,10 +68,8 @@ export default function UploadPage() {
 
       localStorage.setItem("results", JSON.stringify(data));
 
-      alert("Image analyzed successfully!");
       router.push("/results");
 
-      // later → router.push("/results")
     } catch (error) {
       console.error(error);
     } finally {
@@ -97,88 +95,92 @@ export default function UploadPage() {
 
   return (
     <div className="w-full h-[calc(100vh-64px)] bg-white relative overflow-hidden">
-        {isLoading && (
-      <div className="fixed top-[64px] left-0 w-full h-[calc(100vh-64px)] bg-white flex items-center justify-center z-[200]">
-        {/* CENTER CONTENT */}
-        <div className="flex flex-col items-center justify-center text-center -translate-y-6">
-          <RotatingDiamonds />
+      {isLoading && (
+        <div className="fixed top-[64px] left-0 w-full h-[calc(100vh-64px)] bg-white flex items-center justify-center z-[200]">
+          {/* CENTER CONTENT */}
+          <div className="flex flex-col items-center justify-center text-center -translate-y-6">
+            <RotatingDiamonds />
 
-          <p className="text-sm tracking-[0.2em] text-[#1A1B1C] mt-6">
-            PREPARING YOUR ANALYSIS...
-          </p>
+            <p className="text-sm tracking-[0.2em] text-[#1A1B1C] mt-6">
+              PREPARING YOUR ANALYSIS...
+            </p>
 
-          <div className="flex gap-2 mt-3">
-            <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" />
-            <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-100" />
-            <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-200" />
+            <div className="flex gap-2 mt-3">
+              <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" />
+              <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-100" />
+              <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-200" />
+            </div>
           </div>
-        </div>
-        {/* BACK BUTTON */}
-        <div className="
+          {/* BACK BUTTON */}
+          <div
+            className="
           absolute left-[64px] bottom-[64px]
           max-[640px]:left-1/2
           max-[640px]:-translate-x-1/2
           max-[640px]:bottom-[80px]
-        ">
-          {/* DESKTOP */}
-          <div
-            onClick={() => router.back()}
-            className="hidden sm:flex items-center gap-[12px] cursor-pointer group"
+        "
           >
-            <div className="w-[32px] h-[32px] border rotate-45 flex items-center justify-center transition-transform group-hover:scale-110">
-              <span className="-rotate-45 text-[14px] pr-1">◀</span>
+            {/* DESKTOP */}
+            <div
+              onClick={() => router.back()}
+              className="hidden sm:flex items-center gap-[12px] cursor-pointer group"
+            >
+              <div className="w-[32px] h-[32px] border rotate-45 flex items-center justify-center transition-transform group-hover:scale-110">
+                <span className="-rotate-45 text-[14px] pr-1">◀</span>
+              </div>
+              <span className="text-[12px] tracking-[0.08em] pl-2">BACK</span>
             </div>
-            <span className="text-[12px] tracking-[0.08em] pl-2">BACK</span>
-          </div>
 
-          {/* MOBILE */}
-          <div className="sm:hidden">
-            <div className="relative w-[64px] h-[64px] flex items-center justify-center">
-              <div className="absolute animate-spin-outer opacity-20">
-                <Diamond size={80} />
-              </div>
+            {/* MOBILE */}
+            <div className="sm:hidden">
+              <div className="relative w-[64px] h-[64px] flex items-center justify-center">
+                <div className="absolute animate-spin-outer opacity-20">
+                  <Diamond size={80} />
+                </div>
 
-              <div className="absolute animate-spin-middle opacity-40">
-                <Diamond size={60} />
-              </div>
+                <div className="absolute animate-spin-middle opacity-40">
+                  <Diamond size={60} />
+                </div>
 
-              <div
-                onClick={() => router.back()}
-                className="relative w-[48px] h-[48px] border rotate-45 flex items-center justify-center bg-white cursor-pointer group"
-              >
-                <span className="-rotate-45 text-[11px] text-[#1A1B1C] group-hover:scale-110 transition">
-                  BACK
-                </span>
+                <div
+                  onClick={() => router.back()}
+                  className="relative w-[48px] h-[48px] border rotate-45 flex items-center justify-center bg-white cursor-pointer group"
+                >
+                  <span className="-rotate-45 text-[11px] text-[#1A1B1C] group-hover:scale-110 transition">
+                    BACK
+                  </span>
+                </div>
               </div>
             </div>
           </div>
+          {/* TOP RIGHT PREVIEW */}
+          {image && (
+            <div className="absolute top-10 right-10 text-right">
+              <p className="text-xs text-gray-500 mb-2">Preview</p>
+              <img
+                src={`data:image/jpeg;base64,${image}`}
+                className="w-[100px] h-[100px] object-cover border"
+              />
+            </div>
+          )}
         </div>
-        {/* TOP RIGHT PREVIEW */}
-        {image && (
-          <div className="absolute top-10 right-10 text-right">
-            <p className="text-xs text-gray-500 mb-2">Preview</p>
-            <img
-              src={`data:image/jpeg;base64,${image}`}
-              className="w-[100px] h-[100px] object-cover border"
-            />
-          </div>
-        )}
-      </div>
-    )}
+      )}
       {/* MAIN */}
       <div className="absolute inset-0 flex items-center justify-center">
         <div
           className="
           flex items-center justify-between
           w-[1000px]
-          max-[1240px]:w-[90%]
-          max-[1024px]:w-[80%]
-
-          /* 🔥 STACK AT 886px */
+          max-[1200px]:w-[900px]
+          max-[1094px]:w-[790px]
+          max-[924px]:w-[730px]
+          
+          /* STACK AT 886px */
           max-[886px]:flex-col
           max-[886px]:gap-20
-
+          max-[524px]:gap-18
           mb-40
+          max-[324px]:gap-6
         "
         >
           {/* CAMERA */}
@@ -198,7 +200,7 @@ export default function UploadPage() {
             </div>
 
             <div
-              onClick={() => setCameraStep("confirm")}
+              onClick={() => router.push("/capture")}
               className="z-50 cursor-pointer text-[#1A1B1C] transition-transform duration-300 group-hover:scale-110"
             >
               <MdOutlineCamera
@@ -215,7 +217,7 @@ export default function UploadPage() {
 
               <div className="absolute left-1/2 top-1/2 w-[6px] h-[6px] border border-[#1A1B1C]/70 rounded-full translate-x-[88px] translate-y-[-121px]" />
 
-              <div className="absolute left-1/2 top-1/2 translate-x-[120px] translate-y-[-128px]">
+              <div className="absolute left-1/2 top-1/2 translate-x-[106px] translate-y-[-128px]">
                 <p className="text-[12px] text-gray-600 font-medium tracking-[0.12em] leading-[20px]">
                   ALLOW A.I.
                   <br />
@@ -404,11 +406,57 @@ export default function UploadPage() {
               </button>
 
               <button
-                onClick={() => setCameraStep("camera")}
+                onClick={() => {
+                  setCameraStep("loading");
+
+                  setTimeout(() => {
+                    setCameraStep("camera");
+                  }, 1500);
+                }}
                 className="text-white hover:opacity-80 font-semibold transition cursor-pointer"
               >
                 ALLOW
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* CAMERA LOADING */}
+      {cameraStep === "loading" && (
+        <div className="fixed inset-0 bg-white flex items-center justify-center pt-60 z-[120]">
+          <div className="
+            flex flex-col items-center justify-center text-center
+            mb-12
+            max-[540px]:scale-75
+            max-[400px]:scale-65 
+          ">
+            {/* DIAMONDS */}
+            <div className="relative flex items-center justify-center">
+              <RotatingDiamonds />
+
+              {/* CAMERA ICON */}
+              <div className="absolute animate-camera-pulse text-[#1A1B1C]">
+                <MdOutlineCamera className="text-[120px] max-[540px]:text-[80px]" />
+              </div>
+            </div>
+
+            {/* TEXT */}
+            <p className="mt-16 text-[12px] font-semibold text-gray-400 tracking-[0.2em] animate-text-pulse">
+              SETTING UP CAMERA...
+            </p>
+
+            {/* BOTTOM TEXT */}
+            <div className="mt-46 text-[13px] font-semibold tracking-[0.08em] text-gray-500 space-y-4">
+              <p className="uppercase">
+                To get better results make sure to have
+              </p>
+
+              <div className="flex gap-6 justify-center max-[324px]:gap-4 max-[280px]:flex-col">
+                <span>◇ NEUTRAL EXPRESSION</span>
+                <span>◇ FRONTAL POSE</span>
+                <span>◇ ADEQUATE LIGHTING</span>
+              </div>
             </div>
           </div>
         </div>
@@ -508,3 +556,43 @@ function Diamond({ size }: { size: number }) {
     </svg>
   );
 }
+
+<style jsx global>{`
+  @keyframes cameraPulse {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+      color: #1a1b1c;
+    }
+    50% {
+      transform: scale(1.3);
+      opacity: 0.4;
+      color: #9ca3af;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+      color: #1a1b1c;
+    }
+  }
+
+  .animate-camera-pulse {
+    animation: cameraPulse 1.5s ease-in-out infinite;
+  }
+
+  @keyframes textPulse {
+    0% {
+      color: #9ca3af;
+    }
+    50% {
+      color: #1a1b1c;
+    }
+    100% {
+      color: #9ca3af;
+    }
+  }
+
+  .animate-text-pulse {
+    animation: textPulse 1.5s ease-in-out infinite;
+  }
+`}</style>;

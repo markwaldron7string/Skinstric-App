@@ -78,3 +78,41 @@ body {
   50% { transform: translateY(-8px); }
   100% { transform: translateY(0); }
 }
+
+@keyframes cameraPulse {
+  0% {
+    transform: scale(1);
+    color: #1A1B1C;
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    color: #131313;
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1);
+    color: #1A1B1C;
+    opacity: 1;
+  }
+}
+
+.animate-camera-pulse {
+  animation: cameraPulse 2s ease-in-out infinite;
+}
+
+@keyframes textPulse {
+  0% {
+    color: #1A1B1C;
+  }
+  50% {
+    color: #9CA3AF;
+  }
+  100% {
+    color: #1A1B1C;
+  }
+}
+
+.animate-text-pulse {
+  animation: textPulse 1.6s ease-in-out infinite;
+}
