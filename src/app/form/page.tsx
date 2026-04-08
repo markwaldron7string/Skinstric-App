@@ -194,10 +194,12 @@ export default function FormPage() {
         sm:hidden
         absolute bottom-6 left-0 w-full px-6
         flex justify-between items-center
-        max-[324px]:flex-col
+        max-[640px]:flex-col
+        max-[640px]:bottom-14
+        max-[640px]:gap-5
         max-[324px]:justify-center
         max-[324px]:gap-4
-        max-[324px]:bottom-12
+        max-[324px]:bottom-19
       ">
         <MobileButton label="BACK" left onClick={() => router.back()} />
 

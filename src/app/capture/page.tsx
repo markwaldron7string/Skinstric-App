@@ -6,38 +6,40 @@ import { MdOutlineCamera } from "react-icons/md";
 import Link from "next/link";
 
 export default function CapturePage() {
+  const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const router = useRouter();
 
   const [stream, setStream] = useState<MediaStream | null>(null);
 
-  // 🎥 Start camera
+  // Start camera
   useEffect(() => {
-    const startCamera = async () => {
-      try {
-        const mediaStream = await navigator.mediaDevices.getUserMedia({
-          video: true,
-        });
+  let mediaStream: MediaStream;
 
-        if (videoRef.current) {
-          videoRef.current.srcObject = mediaStream;
-        }
+  const startCamera = async () => {
+    try {
+      mediaStream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+      });
 
-        setStream(mediaStream);
-      } catch (err) {
-        console.error("Camera error:", err);
+      if (videoRef.current) {
+        videoRef.current.srcObject = mediaStream;
       }
-    };
 
-    startCamera();
+      setStream(mediaStream);
+    } catch (err) {
+      console.error("Camera error:", err);
+    }
+  };
 
-    return () => {
-      // cleanup camera
-      stream?.getTracks().forEach(track => track.stop());
-    };
-  }, []);
+  startCamera();
 
-  // 📸 Take picture
+  return () => {
+    mediaStream?.getTracks().forEach(track => track.stop());
+  };
+}, []);
+
+  // Take picture
   const handleCapture = () => {
     if (!videoRef.current) return;
 
@@ -50,36 +52,44 @@ export default function CapturePage() {
     const ctx = canvas.getContext("2d");
     ctx?.drawImage(video, 0, 0);
 
-    const base64 = canvas.toDataURL("image/jpeg").split(",")[1];
+    const base64Full = canvas.toDataURL("image/jpeg");
 
-    // send back to upload flow
-    localStorage.setItem("capturedImage", base64);
-
-    router.push("/upload"); // or results flow later
+    setCapturedImage(base64Full);
   };
 
   return (
     <div className="fixed inset-0 bg-black">
-
-      {/* VIDEO FEED */}
-      <video
-        ref={videoRef}
-        autoPlay
-        playsInline
-        className="w-full h-full object-cover"
-      />
+      {capturedImage ? (
+        <img src={capturedImage} className="w-full h-full object-cover" />
+      ) : (
+        <video
+          ref={videoRef}
+          autoPlay
+          playsInline
+          muted
+          className="w-full h-full object-cover"
+        />
+      )}
 
       {/* DARK OVERLAY (optional for contrast) */}
       <div className="absolute inset-0 bg-black/20" />
 
+      {capturedImage && (
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 text-white text-sm tracking-[0.2em] cursor-default">
+          GREAT SHOT!
+        </div>
+      )}
+
       {/* HEADER (CUSTOM - NO NAVBAR) */}
-      <div className="
+      <div
+        className="
         absolute top-0 
         left-0 w-full 
         flex justify-between 
         items-center px-[40px] py-[24px] 
         z-20 text-white
-      ">
+      "
+      >
         <div className="text-[12px] max-[230px]:flex flex-col tracking-[0.15em]">
           <Link href="/">
             <span className="font-semibold">SKINSTRIC</span>
@@ -88,36 +98,113 @@ export default function CapturePage() {
         </div>
       </div>
 
+      {capturedImage && (
+        <div className="
+          absolute bottom-[80px] 
+          left-1/2 
+          -translate-x-1/2 
+          text-center 
+          text-white
+          max-[768px]:mb-18
+          ">
+          <p className="text-sm font-semibold mb-4 cursor-default">Preview</p>
+
+          <div className="flex gap-4 justify-center max-[348px]:gap-2">
+            {/* RETAKE */}
+            <button
+              onClick={() => {
+              setCapturedImage(null);
+
+              setTimeout(() => {
+                if (videoRef.current && stream) {
+                  videoRef.current.srcObject = stream;
+
+                  videoRef.current.play().catch(() => {
+                    console.log("Video play interrupted");
+                  });
+                }
+              }, 50);
+            }}
+              className="
+              px-4 py-2 
+              bg-gray-200
+              opacity-70
+              text-black 
+              text-xs 
+              cursor-pointer
+              rounded-sm     
+              "
+            >
+              Retake
+            </button>
+
+            {/* USE PHOTO */}
+            <button
+              onClick={async () => {
+                if (!capturedImage) return;
+
+                try {
+                  const base64 = capturedImage.split(",")[1];
+
+                  // SHOW LOADING (reuse your upload logic)
+                  localStorage.setItem("image", base64);
+                  router.push("/upload?loading=true");
+
+                } catch (err) {
+                  console.error(err);
+                  alert("Something went wrong");
+                }
+              }}
+              className="
+              px-4 py-2
+              bg-black
+              opacity-70
+              text-white 
+              text-xs 
+              cursor-pointer
+              rounded-sm
+              max-[348px]:w-20
+              "
+            >
+              Use Photo
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* BOTTOM TEXT */}
-      <div className="
+      {!capturedImage && (
+        <div
+          className="
         absolute bottom-[80px] 
         w-full text-center text-white 
         text-xs tracking-[0.15em] 
         cursor-default
-        max-[662px]:mb-24
-        ">
-        TO GET BETTER RESULTS MAKE SURE TO HAVE
-        <div className="mt-2 flex justify-center gap-6 text-[10px] max-[360px]:flex-col">
-          <span>◇ NEUTRAL EXPRESSION</span>
-          <span>◇ FRONTAL POSE</span>
-          <span>◇ ADEQUATE LIGHTING</span>
+        max-[768px]:mb-24
+        "
+        >
+          TO GET BETTER RESULTS MAKE SURE TO HAVE
+          <div className="mt-2 flex justify-center gap-6 text-[10px] max-[360px]:flex-col">
+            <span>◇ NEUTRAL EXPRESSION</span>
+            <span>◇ FRONTAL POSE</span>
+            <span>◇ ADEQUATE LIGHTING</span>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* BACK BUTTON */}
       <div
         className="
-        absolute left-[64px] bottom-[64px]
-        max-[640px]:left-1/2
-        -translate-x-1/2
-        bottom-[80px]
-        text-white
-      "
+          absolute left-[64px] bottom-[64px] flex items-center gap-[12px] cursor-pointer group
+          max-[768px]:left-1/2
+          max-[768px]:-translate-x-1/2
+          max-[768px]:bottom-[60px]
+          "
       >
         {/* DESKTOP */}
         <div
           onClick={() => router.back()}
-          className="hidden sm:flex items-center gap-[12px] cursor-pointer group"
+          className="hidden md:flex items-center gap-[12px] cursor-pointer group"
         >
           <div className="w-[32px] h-[32px] border rotate-45 flex items-center justify-center transition-transform group-hover:scale-110">
             <span className="-rotate-45 text-[14px] pr-1">◀</span>
@@ -126,7 +213,7 @@ export default function CapturePage() {
         </div>
 
         {/* MOBILE */}
-        <div className="sm:hidden text-white">
+        <div className="md:hidden text-white">
           <div className="relative w-[64px] h-[64px] flex items-center justify-center">
             {/* OUTER */}
             <div className="absolute animate-spin-outer opacity-20">
@@ -166,33 +253,39 @@ export default function CapturePage() {
       </div>
 
       {/* CAPTURE BUTTON (RIGHT SIDE) */}
-      <div
-        onClick={handleCapture}
-        className="
+      {!capturedImage && (
+        <div
+          onClick={handleCapture}
+          className="
           absolute right-[40px] 
           top-1/2 -translate-y-1/2 
           flex items-center gap-3 
           text-white 
           cursor-pointer group
-          max-[640px]:left-1/2
-          max-[640px]:right-auto
-          max-[640px]:top-auto
-          max-[640px]:bottom-[60px]
-          max-[640px]:-translate-x-1/2
-          max-[640px]:-translate-y-44
+          max-[768px]:left-1/2
+          max-[768px]:right-auto
+          max-[768px]:top-auto
+          max-[768px]:bottom-[60px]
+          max-[768px]:-translate-x-1/2
+          max-[768px]:-translate-y-44
           max-[360px]:-translate-y-60
           max-[328px]:-translate-y-66
           max-[175px]:-translate-y-70
-          ">
-        <span className="text-xs tracking-[0.1em] max-[640px]:hidden">TAKE PICTURE</span>
-        <MdOutlineCamera size={42} 
-          className="
+          "
+        >
+          <span className="text-xs tracking-[0.1em] max-[768px]:hidden">
+            TAKE PICTURE
+          </span>
+          <MdOutlineCamera
+            size={42}
+            className="
             group-hover:scale-110 
             transition
-            max-[640px]:size-16
-            " 
-            />
-      </div>
+            max-[768px]:size-16
+            "
+          />
+        </div>
+      )}
     </div>
   );
 }
@@ -236,4 +329,5 @@ function Diamond({ size }: { size: number }) {
       opacity: 1;
       color: white;
     }
-  }`}</style>
+  }
+`}</style>;

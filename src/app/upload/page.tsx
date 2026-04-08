@@ -2,33 +2,20 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Webcam from "react-webcam";
 import { MdOutlineCamera } from "react-icons/md";
 import { RiImageCircleAiFill } from "react-icons/ri";
+import { useSearchParams } from "next/navigation";
 
 export default function UploadPage() {
   const router = useRouter();
-  const webcamRef = useRef<Webcam>(null);
+  const searchParams = useSearchParams();
+  const shouldAutoStart = searchParams.get("loading") === "true";
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [image, setImage] = useState<string | null>(null);
   const [cameraStep, setCameraStep] = useState<
     "idle" | "confirm" | "loading" | "camera"
   >("idle");
-
-  const capture = () => {
-    const imageSrc = webcamRef.current?.getScreenshot();
-    if (!imageSrc) return;
-
-    const base64 = imageSrc.split(",")[1];
-
-    setImage(base64);
-    setCameraStep("idle");
-
-    setIsAnalyzing(true);
-    handleAnalyze(base64);
-  };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -39,7 +26,6 @@ export default function UploadPage() {
       const base64 = reader.result as string;
       const cleanBase64 = base64.split(",")[1];
       setImage(cleanBase64);
-      setIsAnalyzing(true);
       handleAnalyze(cleanBase64);
     };
     reader.readAsDataURL(file);
@@ -66,16 +52,24 @@ export default function UploadPage() {
 
       const data = await res.json();
 
-      localStorage.setItem("results", JSON.stringify(data));
+      localStorage.setItem("analysis", JSON.stringify(data.data));
 
-      router.push("/results");
+      router.push("/select");
 
     } catch (error) {
       console.error(error);
     } finally {
-      setIsAnalyzing(false);
     }
   };
+
+  useEffect(() => {
+  if (shouldAutoStart) {
+    const storedImage = localStorage.getItem("image");
+    if (storedImage) {
+      handleAnalyze(storedImage);
+    }
+  }
+}, [shouldAutoStart]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -200,7 +194,7 @@ export default function UploadPage() {
             </div>
 
             <div
-              onClick={() => router.push("/capture")}
+              onClick={() => setCameraStep("confirm")}
               className="z-50 cursor-pointer text-[#1A1B1C] transition-transform duration-300 group-hover:scale-110"
             >
               <MdOutlineCamera
@@ -410,7 +404,7 @@ export default function UploadPage() {
                   setCameraStep("loading");
 
                   setTimeout(() => {
-                    setCameraStep("camera");
+                    router.push("/capture");
                   }, 1500);
                 }}
                 className="text-white hover:opacity-80 font-semibold transition cursor-pointer"
@@ -459,20 +453,6 @@ export default function UploadPage() {
               </div>
             </div>
           </div>
-        </div>
-      )}
-
-      {/* CAMERA VIEW */}
-      {cameraStep === "camera" && !isLoading && (
-        <div className="fixed inset-0 flex flex-col items-center justify-center bg-black z-[100]">
-          <Webcam
-            ref={webcamRef}
-            screenshotFormat="image/jpeg"
-            className="w-[300px] rounded"
-          />
-          <button onClick={capture} className="mt-4 bg-white px-4 py-2">
-            Capture
-          </button>
         </div>
       )}
     </div>
