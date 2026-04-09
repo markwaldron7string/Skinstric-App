@@ -201,12 +201,11 @@ export default function FormPage() {
         max-[324px]:gap-4
         max-[324px]:bottom-19
       ">
-        <MobileButton label="BACK" left onClick={() => router.back()} />
+        <MobileButton label="BACK" onClick={() => router.back()} />
 
         {step === "done" && (
           <MobileButton
             label="PROCEED"
-            right
             onClick={() => router.push("/upload")}
           />
         )}
@@ -216,7 +215,20 @@ export default function FormPage() {
 }
 
 /* ================= INPUT BLOCK ================= */
-function InputBlock({ value, setValue, handleEnter, placeholder, width }) {
+type InputBlockProps = {
+  value: string;
+  setValue: (val: string) => void;
+  handleEnter: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  placeholder: string;
+  width: string;
+};
+function InputBlock({
+  value,
+  setValue,
+  handleEnter,
+  placeholder,
+  width,
+}: InputBlockProps) {
   return (
     <div className="w-full max-w-[500px] mx-auto flex flex-col items-center justify-center gap-[6px]">
 
@@ -249,7 +261,12 @@ function InputBlock({ value, setValue, handleEnter, placeholder, width }) {
 }
 
 /* ================= MOBILE BUTTON ================= */
-function MobileButton({ label, onClick, left, right }) {
+type MobileButtonProps = {
+  label: string;
+  onClick: () => void;
+};
+
+function MobileButton({ label, onClick }: MobileButtonProps) {
   return (
     <div>
       <div className="relative w-[64px] h-[64px] flex items-center justify-center">

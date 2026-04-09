@@ -5,8 +5,9 @@ import { useRouter } from "next/navigation";
 import { MdOutlineCamera } from "react-icons/md";
 import { RiImageCircleAiFill } from "react-icons/ri";
 import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
-export default function UploadPage() {
+function UploadPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const shouldAutoStart = searchParams.get("loading") === "true";
@@ -52,7 +53,7 @@ export default function UploadPage() {
 
       const data = await res.json();
 
-      localStorage.setItem("analysis", JSON.stringify(data.data));
+      localStorage.setItem("analysisData", JSON.stringify(data.data));
 
       router.push("/select");
 
@@ -537,42 +538,10 @@ function Diamond({ size }: { size: number }) {
   );
 }
 
-<style jsx global>{`
-  @keyframes cameraPulse {
-    0% {
-      transform: scale(1);
-      opacity: 1;
-      color: #1a1b1c;
-    }
-    50% {
-      transform: scale(1.3);
-      opacity: 0.4;
-      color: #9ca3af;
-    }
-    100% {
-      transform: scale(1);
-      opacity: 1;
-      color: #1a1b1c;
-    }
-  }
-
-  .animate-camera-pulse {
-    animation: cameraPulse 1.5s ease-in-out infinite;
-  }
-
-  @keyframes textPulse {
-    0% {
-      color: #9ca3af;
-    }
-    50% {
-      color: #1a1b1c;
-    }
-    100% {
-      color: #9ca3af;
-    }
-  }
-
-  .animate-text-pulse {
-    animation: textPulse 1.5s ease-in-out infinite;
-  }
-`}</style>;
+export default function UploadPage() {
+  return (
+    <Suspense fallback={null}>
+      <UploadPageContent />
+    </Suspense>
+  );
+}

@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { RiPlayFill, RiPlayReverseFill } from "react-icons/ri";
-import { IoIosArrowRoundForward } from "react-icons/io";
+import { LuArrowBigRightDash } from "react-icons/lu";
+
 import Link from "next/link";
 
 export default function Home() {
@@ -40,8 +41,6 @@ export default function Home() {
               strokeLinecap="round"
             />
           </svg>
-
-          
         </div>
 
         {/* RIGHT */}
@@ -73,6 +72,40 @@ export default function Home() {
             />
           </svg>
         </div>
+        {/* GLOBAL EXPANDING DIAMONDS */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Diamond 1 */}
+          <div
+            className={`
+    absolute border border-dashed border-[#A0A4AB]/40
+    transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]
+    ${hovered === "right" ? "opacity-100" : "opacity-0"}
+  `}
+            style={{
+              width: "720px",
+              height: "720px",
+              top: "50%",
+              right: "-520px",
+              transform: "translateY(-50%) rotate(45deg)",
+            }}
+          />
+
+          {/* Diamond 2 */}
+          <div
+            className={`
+    absolute border border-dashed border-[#A0A4AB]/25
+    transition-all duration-1000 ease-[cubic-bezier(0.22,1,0.36,1)]
+    ${hovered === "right" ? "opacity-100" : "opacity-0"}
+  `}
+            style={{
+              width: "860px",
+              height: "860px",
+              top: "50%",
+              right: "-640px",
+              transform: "translateY(-50%) rotate(45deg)",
+            }}
+          />
+        </div>
       </div>
 
       {/* ================= DESKTOP CENTER ================= */}
@@ -80,12 +113,12 @@ export default function Home() {
         className={`
           hidden lg:flex absolute inset-0 items-center justify-center
           transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]
-          ${hovered === "left" ? "translate-x-[120px]" : ""}
-          ${hovered === "right" ? "-translate-x-[120px]" : ""}
+          ${hovered === "left" ? "translate-x-[140px]" : ""}
+          ${hovered === "right" ? "-translate-x-[140px]" : ""}
         `}
-      >
+        >
         <h1
-          className="text-center opacity-0 animate-fadeIn cursor-default"
+          className="text-center opacity-0 animate-fadeIn cursor-default max-w-[900px]"
           style={{
             fontSize: "clamp(56px, 8vw, 128px)",
             lineHeight: "0.92",
@@ -96,8 +129,8 @@ export default function Home() {
           <span
             className={`
               block transition-transform duration-1000
-              ${hovered === "right" ? "-translate-x-[140px]" : ""}
-              ${hovered === "left" ? "translate-x-[140px]" : ""}
+              ${hovered === "right" ? "-translate-x-[clamp(80px,12vw,220px)]" : ""}
+              ${hovered === "left" ? "translate-x-[clamp(80px,12vw,220px)]" : ""}
             `}
           >
             Sophisticated
@@ -106,8 +139,8 @@ export default function Home() {
           <span
             className={`
               block transition-transform duration-1000
-              ${hovered === "right" ? "-translate-x-[260px]" : ""}
-              ${hovered === "left" ? "translate-x-[260px]" : ""}
+              ${hovered === "right" ? "-translate-x-[clamp(120px,19vw,345px)]" : ""}
+              ${hovered === "left" ? "translate-x-[clamp(120px,19vw,345px)]" : ""}
             `}
           >
             skincare
@@ -156,6 +189,30 @@ export default function Home() {
             />
           </svg>
 
+          {/* HOVER LINES */}
+          <div
+            className={`
+            absolute inset-0 pointer-events-none
+            transition-opacity duration-500
+            ${hovered === "right" ? "opacity-100" : "opacity-0"}
+          `}
+          >
+            {[1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className="absolute border-t border-dashed border-[#A0A4AB]"
+                style={{
+                  width: `${200 + i * 80}px`,
+                  right: `${-40 - i * 20}px`,
+                  top: "50%",
+                  transform: `rotate(45deg) translateY(${i * 12}px)`,
+                  opacity: 0.4,
+                  transition: "all 0.6s ease",
+                }}
+              />
+            ))}
+          </div>
+
           {/* CONTENT */}
           <div className="relative text-center px-6 mt-12 md:mt-0 max-w-[320px] flex flex-col items-center">
             <h1
@@ -186,12 +243,12 @@ export default function Home() {
               hover:opacity-70
             "
             >
-              <span className="text-[12px] mt-3 tracking-[0.08em]">
+              <span className="text-[12px] font-semibold mt-3 tracking-[0.08em]">
                 ENTER EXPERIENCE
               </span>
 
               <div className="w-[24px] h-[24px] mt-3 border rotate-45 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
-                <IoIosArrowRoundForward className="-rotate-45 text-[32px]" />
+                <LuArrowBigRightDash className="-rotate-45 text-[32px]" />
               </div>
             </Link>
           </div>
@@ -209,10 +266,27 @@ export default function Home() {
           }`}
         >
           <div
-            className={`w-[32px] h-[32px] border rotate-45 flex items-center justify-center transition-transform ${
-              hovered === "left" ? "scale-110" : ""
-            }`}
+            className={`
+              relative
+              w-[32px] h-[32px]
+              rotate-45 flex items-center justify-center
+              transition-all duration-500
+              ${hovered === "right" ? "scale-125" : ""}
+            `}
           >
+            <div className="absolute inset-0 border" />
+            <div
+              className="
+              absolute inset-[-6px]
+              border border-dashed
+              opacity-0
+              scale-75
+              transition-all duration-500
+              group-hover:opacity-100
+              group-hover:scale-100
+              animate-spin-slow
+            "
+            />
             <RiPlayReverseFill className="-rotate-45 text-[18px]" />
           </div>
 
@@ -224,17 +298,58 @@ export default function Home() {
           href="/form"
           onMouseEnter={() => setHovered("right")}
           onMouseLeave={() => setHovered(null)}
-          className={`absolute right-[96px] top-1/2 -translate-y-1/2 flex items-center gap-[16px] cursor-pointer ${
-            hovered === "left" ? "opacity-0" : "opacity-100"
-          }`}
+          className={`
+            group
+            absolute right-[96px] top-1/2 -translate-y-1/2 
+            flex items-center gap-[16px] cursor-pointer
+            transition-all duration-500
+            ${hovered === "left" ? "opacity-0" : "opacity-100"}
+          `}
         >
-          <span className="text-[13px] tracking-[0.08em]">TAKE TEST</span>
+          <span
+            className="
+            text-[13px] tracking-[0.08em]
+            transition-transform duration-500
+            group-hover:-translate-x-[8px]
+          "
+          >
+            TAKE TEST
+          </span>
 
           <div
-            className={`w-[32px] h-[32px] border rotate-45 flex items-center justify-center transition-transform ${
-              hovered === "right" ? "scale-110" : ""
-            }`}
+            className={`
+              relative
+              w-[32px] h-[32px]
+              rotate-45 flex items-center justify-center
+              transition-all duration-300 ease-out
+              ${hovered === "right" ? "scale-110 pulse-hover" : ""}
+            `}
           >
+            {/* MAIN BORDER */}
+            <div className="absolute inset-0 border" />
+
+            {/* INNER BEADED DIAMOND */}
+            <div
+              className={`
+                absolute inset-[4px]
+                opacity-0 scale-75
+                transition-all duration-300
+                ${hovered === "right" ? "opacity-100 scale-100" : ""}
+              `}
+            >
+              <svg viewBox="0 0 100 100" className="w-full h-full">
+                <rect
+                  x="5"
+                  y="5"
+                  width="90"
+                  height="90"
+                  fill="none"
+                  stroke="#1A1B1C"
+                  strokeWidth="2"
+                  strokeDasharray="3 6"
+                />
+              </svg>
+            </div>
             <RiPlayFill className="-rotate-45 text-[18px]" />
           </div>
         </Link>

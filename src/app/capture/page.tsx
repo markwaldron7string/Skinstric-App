@@ -35,7 +35,7 @@ export default function CapturePage() {
   startCamera();
 
   return () => {
-    mediaStream?.getTracks().forEach(track => track.stop());
+    stream?.getTracks().forEach(track => track.stop());
   };
 }, []);
 
@@ -311,23 +311,3 @@ function Diamond({ size }: { size: number }) {
     </svg>
   );
 }
-
-<style jsx global>{`
-  @keyframes cameraPulse {
-    0% {
-      transform: scale(1);
-      opacity: 1;
-      color: white;
-    }
-    50% {
-      transform: scale(1.3);
-      opacity: 0.4;
-      color: white;
-    }
-    100% {
-      transform: scale(1);
-      opacity: 1;
-      color: white;
-    }
-  }
-`}</style>;
