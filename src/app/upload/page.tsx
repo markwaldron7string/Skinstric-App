@@ -1,11 +1,10 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, Suspense, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { MdOutlineCamera } from "react-icons/md";
-import { RiImageCircleAiFill } from "react-icons/ri";
+import { RiImageCircleAiFill, RiPlayReverseFill } from "react-icons/ri";
 import { useSearchParams } from "next/navigation";
-import { Suspense } from "react";
 
 function UploadPageContent() {
   const router = useRouter();
@@ -32,45 +31,47 @@ function UploadPageContent() {
     reader.readAsDataURL(file);
   };
 
-  const handleAnalyze = async (img?: string) => {
-    const imageToSend = img || image;
+  const handleAnalyze = useCallback(
+    async (img?: string) => {
+      const imageToSend = img || image;
 
-    if (!imageToSend) return;
+      if (!imageToSend) return;
 
-    setIsLoading(true);
+      setIsLoading(true);
 
-    try {
-      const res = await fetch(
-        "https://us-central1-api-skinstric-ai.cloudfunctions.net/skinstricPhaseTwo",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
+      try {
+        const res = await fetch(
+          "https://us-central1-api-skinstric-ai.cloudfunctions.net/skinstricPhaseTwo",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ image: imageToSend }),
           },
-          body: JSON.stringify({ image: imageToSend }),
-        },
-      );
+        );
 
-      const data = await res.json();
+        const data = await res.json();
 
-      localStorage.setItem("analysisData", JSON.stringify(data.data));
+        localStorage.setItem("analysisData", JSON.stringify(data.data));
 
-      router.push("/select");
-
-    } catch (error) {
-      console.error(error);
-    } finally {
-    }
-  };
+        router.push("/select");
+      } catch (error) {
+        console.error(error);
+      } finally {
+      }
+    },
+    [image, router],
+  );
 
   useEffect(() => {
-  if (shouldAutoStart) {
-    const storedImage = localStorage.getItem("image");
-    if (storedImage) {
-      handleAnalyze(storedImage);
+    if (shouldAutoStart) {
+      const storedImage = localStorage.getItem("image");
+      if (storedImage) {
+        handleAnalyze(storedImage);
+      }
     }
-  }
-}, [shouldAutoStart]);
+  }, [shouldAutoStart, handleAnalyze]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -91,7 +92,7 @@ function UploadPageContent() {
   return (
     <div className="w-full h-[calc(100vh-64px)] bg-white relative overflow-hidden">
       {isLoading && (
-        <div className="fixed top-[64px] left-0 w-full h-[calc(100vh-64px)] bg-white flex items-center justify-center z-[200]">
+        <div className="fixed top-16 left-0 w-full h-[calc(100vh-64px)] bg-white flex items-center justify-center z-200">
           {/* CENTER CONTENT */}
           <div className="flex flex-col items-center justify-center text-center -translate-y-6">
             <RotatingDiamonds />
@@ -109,26 +110,28 @@ function UploadPageContent() {
           {/* BACK BUTTON */}
           <div
             className="
-          absolute left-[64px] bottom-[64px]
+          absolute left-16 bottom-16
           max-[640px]:left-1/2
           max-[640px]:-translate-x-1/2
-          max-[640px]:bottom-[80px]
+          max-[640px]:bottom-20
         "
           >
             {/* DESKTOP */}
             <div
               onClick={() => router.back()}
-              className="hidden sm:flex items-center gap-[12px] cursor-pointer group"
+              className="hidden sm:flex items-center gap-3 cursor-pointer group"
             >
-              <div className="w-[32px] h-[32px] border rotate-45 flex items-center justify-center transition-transform group-hover:scale-110">
-                <span className="-rotate-45 text-[14px] pr-1">◀</span>
+              <div className="w-8 h-8 border rotate-45 flex items-center justify-center transition-transform group-hover:scale-110">
+                <span className="-rotate-45 text-[20px]">
+                  <RiPlayReverseFill />
+                </span>
               </div>
               <span className="text-[12px] tracking-[0.08em] pl-2">BACK</span>
             </div>
 
             {/* MOBILE */}
             <div className="sm:hidden">
-              <div className="relative w-[64px] h-[64px] flex items-center justify-center">
+              <div className="relative w-16 h-16 flex items-center justify-center">
                 <div className="absolute animate-spin-outer opacity-20">
                   <Diamond size={80} />
                 </div>
@@ -139,7 +142,7 @@ function UploadPageContent() {
 
                 <div
                   onClick={() => router.back()}
-                  className="relative w-[48px] h-[48px] border rotate-45 flex items-center justify-center bg-white cursor-pointer group"
+                  className="relative w-12 h-12 border rotate-45 flex items-center justify-center bg-white cursor-pointer group"
                 >
                   <span className="-rotate-45 text-[11px] text-[#1A1B1C] group-hover:scale-110 transition">
                     BACK
@@ -152,9 +155,11 @@ function UploadPageContent() {
           {image && (
             <div className="absolute top-10 right-10 text-right">
               <p className="text-xs text-gray-500 mb-2">Preview</p>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={`data:image/jpeg;base64,${image}`}
-                className="w-[100px] h-[100px] object-cover border"
+                alt="Uploaded preview"
+                className="w-25 h-25 object-cover border"
               />
             </div>
           )}
@@ -165,29 +170,28 @@ function UploadPageContent() {
         <div
           className="
           flex items-center justify-between
-          w-[1000px]
-          max-[1200px]:w-[900px]
-          max-[1094px]:w-[790px]
-          max-[924px]:w-[730px]
+          w-250
+          lg:w-225
+          lg:mb-40
+          max-[1094px]:w-197.5
           
           /* STACK AT 886px */
           max-[886px]:flex-col
           max-[886px]:gap-20
-          max-[524px]:gap-18
-          mb-40
-          max-[324px]:gap-6
+          max-[886px]:mb-12
+          max-[640px]:gap-5
         "
         >
           {/* CAMERA */}
           <div
             className="
             relative flex items-center justify-center group
-            w-[300px] h-[300px]
+            w-75 h-75
 
             max-[1240px]:scale-90
             max-[1024px]:scale-80
-            max-[768px]:scale-70
-            max-[324px]:scale-60
+            max-[886px]:scale-70
+            max-[640px]:scale-60
           "
           >
             <div className="absolute inset-0 z-0 pointer-events-none flex items-center justify-center">
@@ -208,12 +212,12 @@ function UploadPageContent() {
 
             {/* WAND (HIDDEN AT 524px) */}
             <div className="absolute inset-0 pointer-events-none max-[524px]:hidden">
-              <div className="absolute left-1/2 top-1/2 w-[96px] h-[1px] bg-[#1A1B1C]/70 origin-left rotate-[316deg] translate-x-[20px] translate-y-[-50px]" />
+              <div className="absolute left-1/2 top-1/2 w-24 h-px bg-[#1A1B1C]/70 origin-left rotate-316 translate-x-5 -translate-y-12.5" />
 
-              <div className="absolute left-1/2 top-1/2 w-[6px] h-[6px] border border-[#1A1B1C]/70 rounded-full translate-x-[88px] translate-y-[-121px]" />
+              <div className="absolute left-1/2 top-1/2 w-1.5 h-1.5 border border-[#1A1B1C]/70 rounded-full translate-x-22 -translate-y-30.25" />
 
-              <div className="absolute left-1/2 top-1/2 translate-x-[106px] translate-y-[-128px]">
-                <p className="text-[12px] text-gray-600 font-medium tracking-[0.12em] leading-[20px]">
+              <div className="absolute left-1/2 top-1/2 translate-x-26.5 -translate-y-32">
+                <p className="text-[12px] text-gray-600 font-medium tracking-[0.12em] leading-5">
                   ALLOW A.I.
                   <br />
                   TO SCAN YOUR FACE
@@ -235,11 +239,11 @@ function UploadPageContent() {
           <div
             className="
             relative flex items-center justify-center group
-            w-[300px] h-[300px]
+            w-75 h-75
             max-[1240px]:scale-90
             max-[1024px]:scale-80
-            max-[768px]:scale-70
-            max-[324px]:scale-60
+            max-[886px]:scale-70
+            max-[640px]:scale-60
           "
           >
             <div className="absolute inset-0 z-0 pointer-events-none flex items-center justify-center">
@@ -260,12 +264,12 @@ function UploadPageContent() {
 
             {/* WAND (HIDDEN AT 524px) */}
             <div className="absolute inset-0 pointer-events-none max-[524px]:hidden">
-              <div className="absolute left-1/2 top-1/2 w-[96px] h-[1px] bg-[#1A1B1C]/70 origin-right -rotate-[44deg] translate-x-[-126px] translate-y-[44px]" />
+              <div className="absolute left-1/2 top-1/2 w-24 h-px bg-[#1A1B1C]/70 origin-right -rotate-44 -translate-x-31.5 translate-y-11" />
 
-              <div className="absolute left-1/2 top-1/2 w-[6px] h-[6px] border border-[#1A1B1C]/70 rounded-full translate-x-[-104px] translate-y-[110px]" />
+              <div className="absolute left-1/2 top-1/2 w-1.5 h-1.5 border border-[#1A1B1C]/70 rounded-full -translate-x-26 translate-y-27.5" />
 
-              <div className="absolute left-1/2 top-1/2 translate-x-[-252px] translate-y-[112px] text-right">
-                <p className="text-[12px] text-gray-600 font-medium tracking-[0.12em] leading-[20px]">
+              <div className="absolute left-1/2 top-1/2 -translate-x-63 translate-y-28 text-right">
+                <p className="text-[12px] text-gray-600 font-medium tracking-[0.12em] leading-5">
                   ALLOW A.I.
                   <br />
                   TO ACCESS GALLERY
@@ -297,8 +301,8 @@ function UploadPageContent() {
       {/* TOP LEFT */}
       <div
         className="
-        absolute top-[2px]
-        left-[32px]
+        absolute top-0.5
+        left-8
         text-gray-600 font-bold text-[12px] tracking-[0.08em]
         max-[324px]:left-1/2
         max-[324px]:-translate-x-1/2
@@ -313,27 +317,29 @@ function UploadPageContent() {
       {/* BACK BUTTON */}
       <div
         className="
-        absolute left-[64px] bottom-[64px]
+        absolute left-16 bottom-16
         max-[640px]:left-1/2
         max-[640px]:-translate-x-1/2
-        max-[640px]:bottom-[80px]
+        max-[640px]:bottom-20
         text-black
       "
       >
         {/* DESKTOP */}
         <div
           onClick={() => router.back()}
-          className="hidden sm:flex items-center gap-[12px] cursor-pointer group"
+          className="hidden sm:flex items-center gap-3 cursor-pointer group"
         >
-          <div className="w-[32px] h-[32px] border rotate-45 flex items-center justify-center transition-transform group-hover:scale-110">
-            <span className="-rotate-45 text-[14px] pr-1">◀</span>
+          <div className="w-8 h-8 border rotate-45 flex items-center justify-center transition-transform group-hover:scale-110">
+            <span className="-rotate-45 text-[20px]">
+              <RiPlayReverseFill />
+            </span>
           </div>
           <span className="text-[12px] tracking-[0.08em] pl-2">BACK</span>
         </div>
 
         {/* MOBILE */}
         <div className="sm:hidden text-gray-200">
-          <div className="relative w-[64px] h-[64px] flex items-center justify-center">
+          <div className="relative w-16 h-16 flex items-center justify-center">
             {/* OUTER */}
             <div className="absolute animate-spin-outer opacity-20">
               <Diamond size={80} />
@@ -348,7 +354,7 @@ function UploadPageContent() {
             <div
               onClick={() => router.back()}
               className="
-                relative w-[48px] h-[48px]
+                relative w-12 h-12
                 border rotate-45
                 flex items-center justify-center
                 bg-white
@@ -374,11 +380,11 @@ function UploadPageContent() {
       {/* CAMERA CONFIRM MODAL */}
       {cameraStep === "confirm" && (
         <div
-          className="fixed inset-0 bg-black/40 flex items-center justify-center z-[100]"
+          className="fixed inset-0 bg-black/40 flex items-center justify-center z-100"
           onClick={() => setCameraStep("idle")}
         >
           <div
-            className="bg-black text-white w-[400px]"
+            className="bg-black text-white w-100"
             onClick={(e) => e.stopPropagation()}
           >
             {/* TOP SECTION */}
@@ -389,7 +395,7 @@ function UploadPageContent() {
             </div>
 
             {/* FULL WIDTH DIVIDER */}
-            <div className="w-full h-[1px] bg-white/60" />
+            <div className="w-full h-px bg-white/60" />
 
             {/* BUTTON ROW */}
             <div className="flex justify-between px-12 py-3 text-sm">
@@ -419,13 +425,15 @@ function UploadPageContent() {
 
       {/* CAMERA LOADING */}
       {cameraStep === "loading" && (
-        <div className="fixed inset-0 bg-white flex items-center justify-center pt-60 z-[120]">
-          <div className="
+        <div className="fixed inset-0 bg-white flex items-center justify-center pt-60 z-120">
+          <div
+            className="
             flex flex-col items-center justify-center text-center
             mb-12
             max-[540px]:scale-75
             max-[400px]:scale-65 
-          ">
+          "
+          >
             {/* DIAMONDS */}
             <div className="relative flex items-center justify-center">
               <RotatingDiamonds />

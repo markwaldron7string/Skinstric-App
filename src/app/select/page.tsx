@@ -2,11 +2,19 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { RiPlayFill, RiPlayReverseFill } from "react-icons/ri";
 
-function Diamond({ label, onClick, disabled, isMain }: any) {
+type DiamondProps = {
+  label: string;
+  onClick?: () => void;
+  disabled?: boolean;
+  isMain?: boolean;
+};
+
+function Diamond({ label, onClick, disabled, isMain }: DiamondProps) {
   return (
     <div
-      onClick={onClick}
+      onClick={!disabled ? onClick : undefined}
       className={`
         relative flex items-center justify-center group/diamond
         ${disabled ? "cursor-not-allowed" : "cursor-pointer"}
@@ -15,22 +23,22 @@ function Diamond({ label, onClick, disabled, isMain }: any) {
       {/* DESKTOP: PER-DIAMOND HOVER */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none max-[768px]:hidden">
         <div className="absolute opacity-0 scale-90 group-hover/diamond:opacity-100 group-hover/diamond:scale-100 transition duration-200">
-          <div className="w-[260px] h-[260px] border-[2px] border-dotted border-[#1A1B1C]/70 rotate-45 opacity-40" />
+          <div className="w-65 h-65 border-2 border-dotted border-[#1A1B1C]/70 rotate-45 opacity-40" />
         </div>
 
         <div className="absolute opacity-0 scale-90 group-hover/diamond:opacity-100 group-hover/diamond:scale-100 transition duration-300">
-          <div className="w-[320px] h-[320px] border-[2px] border-dotted border-[#1A1B1C]/50 rotate-45 opacity-30" />
+          <div className="w-[320px] h-80 border-2 border-dotted border-[#1A1B1C]/50 rotate-45 opacity-30" />
         </div>
 
         <div className="absolute opacity-0 scale-90 group-hover/diamond:opacity-100 group-hover/diamond:scale-100 transition duration-400">
-          <div className="w-[380px] h-[380px] border-[2px] border-dotted border-[#1A1B1C]/30 rotate-45 opacity-25" />
+          <div className="w-95 h-95 border-2 border-dotted border-[#1A1B1C]/30 rotate-45 opacity-25" />
         </div>
       </div>
 
       {/* MAIN DIAMOND */}
       <div
         className={`
-          w-[180px] h-[180px]
+          w-45 h-45
           rotate-45 flex items-center justify-center
           transition-all duration-300 ease-out
 
@@ -65,8 +73,8 @@ export default function SelectPage() {
   return (
     <div className="w-full h-[calc(100vh-64px)] bg-white flex flex-col items-center justify-center relative">
       {/* HEADER */}
-      <div className="absolute top-[24px] left-[36px] max-[324px]:text-[12px]">
-        <p className="text-s tracking-[0.1em] font-semibold text-black mb-2">
+      <div className="absolute top-6 left-9 max-[324px]:text-[12px]">
+        <p className="text-s tracking-widest font-semibold text-black mb-2">
           A.I. ANALYSIS
         </p>
         <p className="text-[14px] max-[768px]:text-[12px] max-[324px]:text-[10px] text-gray-500 leading-relaxed">
@@ -79,7 +87,7 @@ export default function SelectPage() {
       {/* DIAMOND SYSTEM */}
       <div
         className="
-          relative w-[160px] h-[160px]
+          relative w-40 h-40
           flex items-center justify-center
           scale-100
           max-[768px]:scale-90
@@ -97,7 +105,7 @@ export default function SelectPage() {
         "
       >
         {/* MOBILE: SYSTEM HOVER (DEMOGRAPHICS) */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none hidden max-[768px]:flex">
+        <div className="absolute inset-0 items-center justify-center pointer-events-none hidden max-[768px]:flex">
           {/* INNER */}
           <div
             className={`
@@ -105,7 +113,7 @@ export default function SelectPage() {
             ${systemHover ? "opacity-100 scale-100" : "opacity-0 scale-90"}
           `}
           >
-            <div className="w-[440px] h-[440px] border-[2px] border-dotted border-[#1A1B1C]/40 rotate-45" />
+            <div className="w-110 h-110 border-2 border-dotted border-[#1A1B1C]/40 rotate-45" />
           </div>
 
           {/* MIDDLE */}
@@ -115,7 +123,7 @@ export default function SelectPage() {
             ${systemHover ? "opacity-100 scale-100" : "opacity-0 scale-90"}
           `}
           >
-            <div className="w-[480px] h-[480px] border-[2px] border-dotted border-[#1A1B1C]/25 rotate-45" />
+            <div className="w-120 h-120 border-2 border-dotted border-[#1A1B1C]/25 rotate-45" />
           </div>
 
           {/* OUTER */}
@@ -125,12 +133,12 @@ export default function SelectPage() {
             ${systemHover ? "opacity-100 scale-100" : "opacity-0 scale-90"}
           `}
           >
-            <div className="w-[520px] h-[520px] border-[2px] border-dotted border-[#1A1B1C]/15 rotate-45" />
+            <div className="w-130 h-130 border-2 border-dotted border-[#1A1B1C]/15 rotate-45" />
           </div>
         </div>
 
         {/* TOP (DEMOGRAPHICS) */}
-        <div className="absolute -top-[140px]">
+        <div className="absolute -top-35">
           <div
             onMouseEnter={() => setSystemHover(true)}
             onMouseLeave={() => setSystemHover(false)}
@@ -144,17 +152,17 @@ export default function SelectPage() {
         </div>
 
         {/* RIGHT */}
-        <div className="absolute right-[-140px]">
+        <div className="absolute -right-35">
           <Diamond label="COSMETIC CONCERNS" disabled />
         </div>
 
         {/* BOTTOM */}
-        <div className="absolute bottom-[-140px]">
+        <div className="absolute -bottom-35">
           <Diamond label="WEATHER" disabled />
         </div>
 
         {/* LEFT */}
-        <div className="absolute left-[-140px]">
+        <div className="absolute -left-35">
           <Diamond label="SKIN TYPE DETAILS" disabled />
         </div>
       </div>
@@ -162,10 +170,10 @@ export default function SelectPage() {
       {/* BACK */}
       <div
         className="
-        absolute left-[0] bottom-[64px] 
+        absolute left-0 bottom-16 
         text-black
         w-full
-        flex justify-between px-[64px]
+        flex justify-between px-16
         max-[418px]:left-1/2 
         max-[418px]:-translate-x-1/2
         max-[418px]:w-auto
@@ -174,7 +182,6 @@ export default function SelectPage() {
         max-[418px]:gap-8
         max-[418px]:px-0
         max-[418px]:scale-90
-        max-[418px]:scale-80
         max-[366px]:scale-75
       "
       >
@@ -182,14 +189,16 @@ export default function SelectPage() {
         <div
           onClick={() => router.back()}
           className="
-            flex items-center gap-[12px] cursor-pointer group
+            flex items-center gap-3 cursor-pointer group
             max-[418px]:order-1
             max-[418px]:flex-col
             max-[418px]:-translate-y-2
           "
         >
-          <div className="w-[32px] h-[32px] border rotate-45 flex items-center justify-center transition-transform group-hover:scale-110">
-            <span className="-rotate-45 text-[14px] pr-1">◀</span>
+          <div className="w-8 h-8 border rotate-45 flex items-center justify-center transition-transform group-hover:scale-110">
+            <span className="-rotate-45 text-[20px]">
+              <RiPlayReverseFill />
+            </span>
           </div>
           <span className="text-[12px] tracking-[0.08em] pl-2">BACK</span>
         </div>
@@ -198,7 +207,7 @@ export default function SelectPage() {
         <div
           onClick={() => router.push("/summary")}
           className="
-            flex items-center gap-[12px] cursor-pointer group
+            flex items-center gap-3 cursor-pointer group
             max-[418px]:order-2
             max-[418px]:flex-col-reverse
             max-[418px]:-translate-y-2
@@ -209,8 +218,10 @@ export default function SelectPage() {
             GET SUMMARY
           </span>
 
-          <div className="w-[32px] h-[32px] border rotate-45 flex items-center justify-center transition-transform group-hover:scale-110">
-            <span className="-rotate-45 text-[14px] pl-1">▶</span>
+          <div className="w-8 h-8 border rotate-45 flex items-center justify-center transition-transform group-hover:scale-110">
+            <span className="-rotate-45 text-[20px]">
+              <RiPlayFill />
+            </span>
           </div>
         </div>
       </div>

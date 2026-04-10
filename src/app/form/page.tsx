@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { RiPlayFill, RiPlayReverseFill } from "react-icons/ri";
 
 type Step = "name" | "city" | "loading" | "done";
 
@@ -9,7 +10,7 @@ export default function FormPage() {
   const [step, setStep] = useState<Step>("name");
   const [value, setValue] = useState("");
   const [name, setName] = useState("");
-  const [city, setCity] = useState("");
+  const [, setCity] = useState("");
   const [error, setError] = useState("");
 
   const router = useRouter();
@@ -43,7 +44,7 @@ export default function FormPage() {
       try {
         localStorage.setItem(
           "user",
-          JSON.stringify({ name: finalName, location: finalCity })
+          JSON.stringify({ name: finalName, location: finalCity }),
         );
 
         await fetch(
@@ -55,7 +56,7 @@ export default function FormPage() {
               name: finalName,
               location: finalCity,
             }),
-          }
+          },
         );
 
         setTimeout(() => setStep("done"), 1200);
@@ -68,13 +69,10 @@ export default function FormPage() {
 
   return (
     <div className="w-full h-[calc(100vh-64px)] bg-white relative flex items-center justify-center">
-
       {/* CENTER WRAPPER */}
-      <div className="relative flex flex-col items-center text-center -translate-y-[80px]">
-
+      <div className="relative flex flex-col items-center text-center -translate-y-20">
         {/* ================= DIAMONDS ================= */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-
           <div className="absolute animate-spin-outer opacity-30 scale-[0.4] min-[480px]:scale-[0.5] sm:scale-[0.7] md:scale-100">
             <Diamond size={800} />
           </div>
@@ -86,7 +84,6 @@ export default function FormPage() {
           <div className="absolute animate-spin-inner opacity-70 scale-[0.4] min-[480px]:scale-[0.5] sm:scale-[0.7] md:scale-100">
             <Diamond size={600} />
           </div>
-
         </div>
 
         {/* ================= CONTENT ================= */}
@@ -145,22 +142,22 @@ export default function FormPage() {
           </>
         )}
 
-        {error && (
-          <p className="text-red-500 text-sm mt-3">{error}</p>
-        )}
+        {error && <p className="text-red-500 text-sm mt-3">{error}</p>}
       </div>
 
       {/* TOP LEFT */}
-      <div className="
-        absolute top-[2px]
-        left-[32px]
+      <div
+        className="
+        absolute top-0.5
+        left-8
         text-gray-600 font-bold text-[12px] tracking-[0.08em]
         max-[324px]:left-1/2
         max-[324px]:-translate-x-1/2
         max-[324px]:text-center
         select-none
         cursor-default
-      ">
+      "
+      >
         TO START ANALYSIS
       </div>
 
@@ -168,10 +165,12 @@ export default function FormPage() {
       <div className="hidden sm:block text-black">
         <div
           onClick={() => router.back()}
-          className="absolute left-[64px] bottom-[64px] flex items-center gap-[12px] cursor-pointer group"
+          className="absolute left-16 bottom-16 flex items-center gap-3 cursor-pointer group"
         >
-          <div className="w-[32px] h-[32px] border rotate-45 flex items-center justify-center transition-transform group-hover:scale-110">
-            <span className="-rotate-45 text-[14px] pr-1">◀</span>
+          <div className="w-8 h-8 border rotate-45 flex items-center justify-center transition-transform group-hover:scale-110">
+            <span className="-rotate-45 text-[20px]">
+              <RiPlayReverseFill />
+            </span>
           </div>
           <span className="text-[12px] tracking-[0.08em] pl-2">BACK</span>
         </div>
@@ -179,18 +178,21 @@ export default function FormPage() {
         {step === "done" && (
           <div
             onClick={() => router.push("/upload")}
-            className="absolute right-[64px] bottom-[64px] flex items-center gap-[12px] cursor-pointer group animate-bounce-once"
+            className="absolute right-16 bottom-16 flex items-center gap-3 cursor-pointer group animate-bounce-once"
           >
-            <span className="text-[12px] tracking-[0.08em] pr-2" >PROCEED</span>
-            <div className="w-[32px] h-[32px] border rotate-45 flex items-center justify-center transition-transform group-hover:scale-110">
-              <span className="-rotate-45 text-[14px] pl-1">▶</span>
+            <span className="text-[12px] tracking-[0.08em] pr-2">PROCEED</span>
+            <div className="w-8 h-8 border rotate-45 flex items-center justify-center transition-transform group-hover:scale-110">
+              <span className="-rotate-45 text-[20px]">
+                <RiPlayFill />
+              </span>
             </div>
           </div>
         )}
       </div>
 
       {/* MOBILE BUTTONS */}
-      <div className="
+      <div
+        className="
         sm:hidden
         absolute bottom-6 left-0 w-full px-6
         flex justify-between items-center
@@ -200,7 +202,8 @@ export default function FormPage() {
         max-[324px]:justify-center
         max-[324px]:gap-4
         max-[324px]:bottom-19
-      ">
+      "
+      >
         <MobileButton label="BACK" onClick={() => router.back()} />
 
         {step === "done" && (
@@ -230,8 +233,7 @@ function InputBlock({
   width,
 }: InputBlockProps) {
   return (
-    <div className="w-full max-w-[500px] mx-auto flex flex-col items-center justify-center gap-[6px]">
-
+    <div className="w-full max-w-125 mx-auto flex flex-col items-center justify-center gap-1.5">
       <input
         autoFocus
         placeholder={placeholder}
@@ -251,11 +253,11 @@ function InputBlock({
         "
         style={{
           fontFamily: "var(--font-roobert)",
-          fontVariationSettings: '"wght" 400'
+          fontVariationSettings: '"wght" 400',
         }}
       />
 
-      <div className="h-[1px] bg-[#c3cad1]" style={{ width }} />
+      <div className="h-px bg-[#c3cad1]" style={{ width }} />
     </div>
   );
 }
@@ -269,8 +271,7 @@ type MobileButtonProps = {
 function MobileButton({ label, onClick }: MobileButtonProps) {
   return (
     <div>
-      <div className="relative w-[64px] h-[64px] flex items-center justify-center">
-
+      <div className="relative w-16 h-16 flex items-center justify-center">
         <div className="absolute animate-spin-outer opacity-20">
           <Diamond size={80} />
         </div>
@@ -282,7 +283,7 @@ function MobileButton({ label, onClick }: MobileButtonProps) {
         <div
           onClick={onClick}
           className="
-            relative w-[48px] h-[48px]
+            relative w-12 h-12
             border rotate-45
             flex items-center justify-center
             bg-white
@@ -290,12 +291,14 @@ function MobileButton({ label, onClick }: MobileButtonProps) {
             group
           "
         >
-          <span className="
+          <span
+            className="
             -rotate-45 text-[11px]
             text-[#1A1B1C]
             transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]
             group-hover:scale-110
-          ">
+          "
+          >
             {label}
           </span>
         </div>

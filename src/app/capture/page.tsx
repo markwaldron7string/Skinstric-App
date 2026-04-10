@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { MdOutlineCamera } from "react-icons/md";
 import Link from "next/link";
+import { RiPlayReverseFill } from "react-icons/ri";
 
 export default function CapturePage() {
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
@@ -14,30 +15,30 @@ export default function CapturePage() {
 
   // Start camera
   useEffect(() => {
-  let mediaStream: MediaStream;
+    let mediaStream: MediaStream;
 
-  const startCamera = async () => {
-    try {
-      mediaStream = await navigator.mediaDevices.getUserMedia({
-        video: true,
-      });
+    const startCamera = async () => {
+      try {
+        mediaStream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+        });
 
-      if (videoRef.current) {
-        videoRef.current.srcObject = mediaStream;
+        if (videoRef.current) {
+          videoRef.current.srcObject = mediaStream;
+        }
+
+        setStream(mediaStream);
+      } catch (err) {
+        console.error("Camera error:", err);
       }
+    };
 
-      setStream(mediaStream);
-    } catch (err) {
-      console.error("Camera error:", err);
-    }
-  };
+    startCamera();
 
-  startCamera();
-
-  return () => {
-    stream?.getTracks().forEach(track => track.stop());
-  };
-}, []);
+    return () => {
+      mediaStream?.getTracks().forEach((track) => track.stop());
+    };
+  }, []);
 
   // Take picture
   const handleCapture = () => {
@@ -55,12 +56,21 @@ export default function CapturePage() {
     const base64Full = canvas.toDataURL("image/jpeg");
 
     setCapturedImage(base64Full);
+
+    stream?.getTracks().forEach((track) => track.stop());
   };
 
   return (
     <div className="fixed inset-0 bg-black">
       {capturedImage ? (
-        <img src={capturedImage} className="w-full h-full object-cover" />
+        <>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={capturedImage}
+            alt="Captured preview"
+            className="w-full h-full object-cover"
+          />
+        </>
       ) : (
         <video
           ref={videoRef}
@@ -86,7 +96,7 @@ export default function CapturePage() {
         absolute top-0 
         left-0 w-full 
         flex justify-between 
-        items-center px-[40px] py-[24px] 
+        items-center px-10 py-6 
         z-20 text-white
       "
       >
@@ -99,32 +109,34 @@ export default function CapturePage() {
       </div>
 
       {capturedImage && (
-        <div className="
-          absolute bottom-[80px] 
+        <div
+          className="
+          absolute bottom-20 
           left-1/2 
           -translate-x-1/2 
           text-center 
           text-white
           max-[768px]:mb-18
-          ">
+          "
+        >
           <p className="text-sm font-semibold mb-4 cursor-default">Preview</p>
 
           <div className="flex gap-4 justify-center max-[348px]:gap-2">
             {/* RETAKE */}
             <button
               onClick={() => {
-              setCapturedImage(null);
+                setCapturedImage(null);
 
-              setTimeout(() => {
-                if (videoRef.current && stream) {
-                  videoRef.current.srcObject = stream;
+                setTimeout(() => {
+                  if (videoRef.current && stream) {
+                    videoRef.current.srcObject = stream;
 
-                  videoRef.current.play().catch(() => {
-                    console.log("Video play interrupted");
-                  });
-                }
-              }, 50);
-            }}
+                    videoRef.current.play().catch(() => {
+                      console.log("Video play interrupted");
+                    });
+                  }
+                }, 50);
+              }}
               className="
               px-4 py-2 
               bg-gray-200
@@ -143,27 +155,30 @@ export default function CapturePage() {
               onClick={async () => {
                 if (!capturedImage) return;
 
+                // STOP CAMERA
+                if (stream) {
+                  stream.getTracks().forEach((track) => track.stop());
+                }
+
                 try {
                   const base64 = capturedImage.split(",")[1];
 
-                  // SHOW LOADING (reuse your upload logic)
                   localStorage.setItem("image", base64);
                   router.push("/upload?loading=true");
-
                 } catch (err) {
                   console.error(err);
                   alert("Something went wrong");
                 }
               }}
               className="
-              px-4 py-2
-              bg-black
-              opacity-70
-              text-white 
-              text-xs 
-              cursor-pointer
-              rounded-sm
-              max-[348px]:w-20
+                px-4 py-2
+                bg-black
+                opacity-70
+                text-white 
+                text-xs 
+                cursor-pointer
+                rounded-sm
+                max-[348px]:w-20
               "
             >
               Use Photo
@@ -176,7 +191,7 @@ export default function CapturePage() {
       {!capturedImage && (
         <div
           className="
-        absolute bottom-[80px] 
+        absolute bottom-20 
         w-full text-center text-white 
         text-xs tracking-[0.15em] 
         cursor-default
@@ -195,26 +210,28 @@ export default function CapturePage() {
       {/* BACK BUTTON */}
       <div
         className="
-          absolute left-[64px] bottom-[64px] flex items-center gap-[12px] cursor-pointer group
+          absolute left-16 bottom-16 flex items-center gap-3 cursor-pointer group
           max-[768px]:left-1/2
           max-[768px]:-translate-x-1/2
-          max-[768px]:bottom-[60px]
+          max-[768px]:bottom-15
           "
       >
         {/* DESKTOP */}
         <div
           onClick={() => router.back()}
-          className="hidden md:flex items-center gap-[12px] cursor-pointer group"
+          className="hidden md:flex items-center gap-3 cursor-pointer group"
         >
-          <div className="w-[32px] h-[32px] border rotate-45 flex items-center justify-center transition-transform group-hover:scale-110">
-            <span className="-rotate-45 text-[14px] pr-1">◀</span>
+          <div className="w-8 h-8 border rotate-45 flex items-center justify-center transition-transform group-hover:scale-110">
+            <span className="-rotate-45 text-[20px]">
+              <RiPlayReverseFill />
+            </span>
           </div>
           <span className="text-[12px] tracking-[0.08em] pl-2">BACK</span>
         </div>
 
         {/* MOBILE */}
         <div className="md:hidden text-white">
-          <div className="relative w-[64px] h-[64px] flex items-center justify-center">
+          <div className="relative w-16 h-16 flex items-center justify-center">
             {/* OUTER */}
             <div className="absolute animate-spin-outer opacity-20">
               <Diamond size={80} />
@@ -229,7 +246,7 @@ export default function CapturePage() {
             <div
               onClick={() => router.back()}
               className="
-                relative w-[48px] h-[48px]
+                relative w-12 h-12
                 border rotate-45
                 flex items-center justify-center
                 bg-transparent
@@ -257,7 +274,7 @@ export default function CapturePage() {
         <div
           onClick={handleCapture}
           className="
-          absolute right-[40px] 
+          absolute right-10 
           top-1/2 -translate-y-1/2 
           flex items-center gap-3 
           text-white 
@@ -265,7 +282,7 @@ export default function CapturePage() {
           max-[768px]:left-1/2
           max-[768px]:right-auto
           max-[768px]:top-auto
-          max-[768px]:bottom-[60px]
+          max-[768px]:bottom-15
           max-[768px]:-translate-x-1/2
           max-[768px]:-translate-y-44
           max-[360px]:-translate-y-60
@@ -273,7 +290,7 @@ export default function CapturePage() {
           max-[175px]:-translate-y-70
           "
         >
-          <span className="text-xs tracking-[0.1em] max-[768px]:hidden">
+          <span className="text-xs tracking-widest max-[768px]:hidden">
             TAKE PICTURE
           </span>
           <MdOutlineCamera

@@ -10,7 +10,7 @@ export default function Home() {
   const [hovered, setHovered] = useState<"left" | "right" | null>(null);
 
   return (
-    <div className="w-full min-h-screen bg-white text-[#1A1B1C] relative overflow-hidden mt-[-64px]">
+    <div className="w-full min-h-screen bg-white text-[#1A1B1C] relative overflow-hidden -mt-16">
       {/* ================= DESKTOP DIAGONALS ================= */}
       <div className="absolute inset-0 hidden lg:block">
         {/* LEFT */}
@@ -77,10 +77,10 @@ export default function Home() {
           {/* Diamond 1 */}
           <div
             className={`
-    absolute border border-dashed border-[#A0A4AB]/40
-    transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]
-    ${hovered === "right" ? "opacity-100" : "opacity-0"}
-  `}
+              absolute border border-dashed border-[#A0A4AB]/40
+              transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]
+              ${hovered === "right" ? "opacity-100" : "opacity-0"}
+            `}
             style={{
               width: "720px",
               height: "720px",
@@ -93,10 +93,10 @@ export default function Home() {
           {/* Diamond 2 */}
           <div
             className={`
-    absolute border border-dashed border-[#A0A4AB]/25
-    transition-all duration-1000 ease-[cubic-bezier(0.22,1,0.36,1)]
-    ${hovered === "right" ? "opacity-100" : "opacity-0"}
-  `}
+              absolute border border-dashed border-[#A0A4AB]/25
+              transition-all duration-1000 ease-[cubic-bezier(0.22,1,0.36,1)]
+              ${hovered === "right" ? "opacity-100" : "opacity-0"}
+            `}
             style={{
               width: "860px",
               height: "860px",
@@ -113,12 +113,12 @@ export default function Home() {
         className={`
           hidden lg:flex absolute inset-0 items-center justify-center
           transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]
-          ${hovered === "left" ? "translate-x-[140px]" : ""}
-          ${hovered === "right" ? "-translate-x-[140px]" : ""}
+          ${hovered === "left" ? "translate-x-35" : ""}
+          ${hovered === "right" ? "-translate-x-35" : ""}
         `}
-        >
+      >
         <h1
-          className="text-center opacity-0 animate-fadeIn cursor-default max-w-[900px]"
+          className="text-center opacity-0 animate-fadeIn cursor-default max-w-225"
           style={{
             fontSize: "clamp(56px, 8vw, 128px)",
             lineHeight: "0.92",
@@ -150,14 +150,14 @@ export default function Home() {
 
       {/* ================= RESPONSIVE DIAMOND ================= */}
       <div className="lg:hidden absolute inset-0 flex items-center justify-center">
-        <div className="relative flex items-center justify-center">
+        <div className="relative flex items-center justify-center scale-[0.95] sm:scale-100">
           {/* OUTER */}
           <svg
             viewBox="0 0 520 520"
             className="absolute"
             style={{
-              width: "clamp(420px, 60vw, 600px)",
-              height: "clamp(420px, 60vw, 600px)",
+              width: "clamp(360px, 90vw, 620px)",
+              height: "clamp(360px, 90vw, 620px)",
             }}
           >
             <path
@@ -175,8 +175,8 @@ export default function Home() {
             viewBox="0 0 420 420"
             className="absolute"
             style={{
-              width: "clamp(360px, 48vw, 520px)",
-              height: "clamp(360px, 48vw, 520px)",
+              width: "clamp(300px, 75vw, 520px)",
+              height: "clamp(300px, 75vw, 520px)",
             }}
           >
             <path
@@ -214,12 +214,20 @@ export default function Home() {
           </div>
 
           {/* CONTENT */}
-          <div className="relative text-center px-6 mt-12 md:mt-0 max-w-[320px] flex flex-col items-center">
+          <div
+            className="
+            relative text-center 
+            px-4 sm:px-6 
+            mt-10 md:mt-0 
+            w-[clamp(220px,55vw,320px)]
+            flex flex-col items-center
+          "
+          >
             <h1
               className="mb-5"
               style={{
-                fontSize: "clamp(28px, 4vw, 56px)",
-                lineHeight: "clamp(30px, 4.2vw, 58px)",
+                fontSize: "clamp(22px, 5vw, 48px)",
+                lineHeight: "clamp(24px, 5.2vw, 50px)",
                 letterSpacing: "-0.06em",
                 fontVariationSettings: '"wght" 500',
               }}
@@ -227,7 +235,7 @@ export default function Home() {
               Sophisticated <br /> skincare
             </h1>
 
-            <p className="text-[#8a8e96] font-bold mb-5 text-[14px] leading-[20px]">
+            <p className="text-[#8a8e96] font-bold mb-5 text-[14px] leading-5">
               Skinstric developed an A.I. that creates a highly-personalised
               routine tailored to what your skin needs.
             </p>
@@ -243,12 +251,26 @@ export default function Home() {
               hover:opacity-70
             "
             >
-              <span className="text-[12px] font-semibold mt-3 tracking-[0.08em]">
+              <span
+                className="font-semibold mt-3 tracking-[0.08em]"
+                style={{
+                  fontSize: "clamp(10px, 2.5vw, 12px)",
+                }}
+              >
                 ENTER EXPERIENCE
               </span>
 
-              <div className="w-[24px] h-[24px] mt-3 border rotate-45 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
-                <LuArrowBigRightDash className="-rotate-45 text-[32px]" />
+              <div
+                className="mt-3 border rotate-45 flex items-center justify-center transition-transform duration-300 group-hover:scale-110"
+                style={{
+                  width: "clamp(18px, 5vw, 24px)",
+                  height: "clamp(18px, 5vw, 24px)",
+                }}
+              >
+                <LuArrowBigRightDash
+                  className="-rotate-45"
+                  style={{ fontSize: "clamp(18px, 5vw, 28px)" }}
+                />
               </div>
             </Link>
           </div>
@@ -261,14 +283,14 @@ export default function Home() {
         <div
           onMouseEnter={() => setHovered("left")}
           onMouseLeave={() => setHovered(null)}
-          className={`absolute left-[96px] top-1/2 -translate-y-1/2 flex items-center gap-[16px] cursor-pointer ${
+          className={`absolute left-24 top-1/2 -translate-y-1/2 flex items-center gap-4 cursor-pointer ${
             hovered === "right" ? "opacity-0" : "opacity-100"
           }`}
         >
           <div
             className={`
               relative
-              w-[32px] h-[32px]
+              w-8 h-8
               rotate-45 flex items-center justify-center
               transition-all duration-500
               ${hovered === "right" ? "scale-125" : ""}
@@ -277,7 +299,7 @@ export default function Home() {
             <div className="absolute inset-0 border" />
             <div
               className="
-              absolute inset-[-6px]
+              absolute -inset-1.5
               border border-dashed
               opacity-0
               scale-75
@@ -300,8 +322,8 @@ export default function Home() {
           onMouseLeave={() => setHovered(null)}
           className={`
             group
-            absolute right-[96px] top-1/2 -translate-y-1/2 
-            flex items-center gap-[16px] cursor-pointer
+            absolute right-24 top-1/2 -translate-y-1/2 
+            flex items-center gap-4 cursor-pointer
             transition-all duration-500
             ${hovered === "left" ? "opacity-0" : "opacity-100"}
           `}
@@ -310,7 +332,7 @@ export default function Home() {
             className="
             text-[13px] tracking-[0.08em]
             transition-transform duration-500
-            group-hover:-translate-x-[8px]
+            group-hover:-translate-x-2
           "
           >
             TAKE TEST
@@ -319,7 +341,7 @@ export default function Home() {
           <div
             className={`
               relative
-              w-[32px] h-[32px]
+              w-8 h-8
               rotate-45 flex items-center justify-center
               transition-all duration-300 ease-out
               ${hovered === "right" ? "scale-110 pulse-hover" : ""}
@@ -331,7 +353,7 @@ export default function Home() {
             {/* INNER BEADED DIAMOND */}
             <div
               className={`
-                absolute inset-[4px]
+                absolute inset-1
                 opacity-0 scale-75
                 transition-all duration-300
                 ${hovered === "right" ? "opacity-100 scale-100" : ""}
@@ -356,7 +378,7 @@ export default function Home() {
       </div>
 
       {/* ================= BOTTOM TEXT ================= */}
-      <div className="hidden lg:block absolute left-[64px] bottom-[96px] w-[316px] text-[14px] leading-[20px] uppercase">
+      <div className="hidden lg:block absolute left-16 bottom-24 w-79 text-[14px] leading-5 uppercase">
         SKINSTRIC DEVELOPED AN A.I. THAT CREATES A HIGHLY-PERSONALIZED ROUTINE
         TAILORED TO WHAT YOUR SKIN NEEDS.
       </div>

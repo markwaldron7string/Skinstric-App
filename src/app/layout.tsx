@@ -21,12 +21,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${roobert.className} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-white text-[#1A1B1C]">
-
         <ConditionalHeader />
 
         {/* PAGE CONTENT */}
         <main className="flex-1">{children}</main>
-
       </body>
     </html>
   );
