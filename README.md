@@ -1,37 +1,126 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## 🧴 Skinstric – AI Skincare Analysis Experience
 
-## Getting Started
+This is an interactive web application that simulates an AI-powered skincare analysis experience. Users are guided through a multi-step flow where they input personal data, capture or upload an image, and receive a dynamic “AI analysis” of demographic attributes such as age, race, and gender.
 
-First, run the development server:
+The project emphasizes smooth UI transitions, responsive design, and a polished, modern user experience inspired by high-end product interfaces.
+
+---
+
+## 🚀 Features
+
+* **Multi-step user flow**
+
+  * Landing page → Form → Upload/Capture → Analysis Summary
+
+* **AI-style analysis visualization**
+
+  * Dynamic percentage circle with animated transitions
+  * Category switching (race, age, gender)
+  * Sorted confidence breakdown panel
+
+* **Camera & image upload**
+
+  * Device camera integration
+  * Image preview and confirmation flow
+  * Local storage persistence between pages
+
+* **Advanced UI/UX interactions**
+
+  * Custom hover animations (expanding diamond, pulse effects)
+  * Smooth transitions and easing curves
+  * Responsive layout across desktop and mobile
+
+* **State persistence**
+
+  * Analysis data stored in `localStorage`
+  * Seamless handoff between routes
+
+---
+
+## 🛠 Tech Stack
+
+* **Framework:** Next.js (App Router)
+* **Language:** TypeScript
+* **Styling:** Tailwind CSS
+* **Icons:** React Icons
+* **State Management:** React Hooks (`useState`, `useEffect`)
+* **Deployment:** Vercel
+
+---
+
+## 🧠 Key Implementation Details
+
+* **Hydration-safe data loading**
+
+  * Client-only data (`localStorage`) is accessed within `useEffect` to prevent SSR mismatches.
+
+* **Derived state handling**
+
+  * Default selections are computed dynamically instead of being redundantly stored in state.
+
+* **Animation handling**
+
+  * SVG stroke manipulation (`strokeDashoffset`) is used for the circular progress animation.
+  * Edge cases (e.g., 0%) are handled to prevent rendering artifacts.
+
+* **Responsive design strategy**
+
+  * Layout shifts from absolute positioning (desktop) to stacked flex layouts (mobile)
+  * Uses `clamp()` and Tailwind breakpoints for fluid scaling
+
+---
+
+## 📱 Responsiveness
+
+The application is optimized for:
+
+* Desktop (primary experience)
+* Tablet
+* Mobile (including small-width devices)
+
+Special care was taken to:
+
+* Prevent overflow issues
+* Maintain visual hierarchy
+* Ensure interactive elements remain accessible
+
+---
+
+## ⚠️ Notes
+
+* AI analysis is simulated for demonstration purposes
+* No real image processing or ML model is used
+
+---
+
+## 📦 Getting Started
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then open:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 🌐 Deployment
 
-To learn more about Next.js, take a look at the following resources:
+The project is deployed on Vercel and optimized for production using:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm run build
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## ✨ Future Improvements
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# Skinstric-App
+* Integrate real AI/ML image analysis
+* Add user authentication
+* Store results in a database
+* Enhance animation system with Framer Motion
