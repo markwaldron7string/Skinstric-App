@@ -16,22 +16,11 @@ export default function SummaryPage() {
   const getTop = (obj: Record<string, number>) => {
     const entries = Object.entries(obj);
     if (entries.length === 0) return "";
-
     return entries.sort((a, b) => b[1] - a[1])[0][0];
   };
 
-  const [data] = useState<AnalysisData | null>(() => {
-    if (typeof window === "undefined") return null;
-
-    const stored = localStorage.getItem("analysisData");
-    if (!stored) return null;
-
-    try {
-      return JSON.parse(stored);
-    } catch {
-      return null;
-    }
-  });
+  // ---------------- STATE ----------------
+  const [data, setData] = useState<AnalysisData | null>(null);
 
   const [activeCategory, setActiveCategory] = useState<
     "race" | "age" | "gender"
@@ -45,37 +34,53 @@ export default function SummaryPage() {
 
   const [isZero, setIsZero] = useState(false);
 
-  const currentData: Record<string, number> = data?.[activeCategory] || {};
-  const defaultSelected = data
-  ? {
-      race: getTop(data.race),
-      age: getTop(data.age),
-      gender: getTop(data.gender),
+  // ---------------- LOAD DATA ----------------
+
+  /* eslint-disable react-hooks/set-state-in-effect */
+  useEffect(() => {
+    const stored = localStorage.getItem("analysisData");
+    if (!stored) return;
+
+    try {
+      setData(JSON.parse(stored));
+    } catch {
+      setData(null);
     }
-  : { race: "", age: "", gender: "" };
+  }, []);
+  /* eslint-enable react-hooks/set-state-in-effect */
+
+  // ---------------- DERIVED DATA ----------------
+  const currentData: Record<string, number> = data?.[activeCategory] || {};
+
+  const defaultSelected = data
+    ? {
+        race: getTop(data.race),
+        age: getTop(data.age),
+        gender: getTop(data.gender),
+      }
+    : { race: "", age: "", gender: "" };
+
   const currentSelected =
-  selected[activeCategory] || defaultSelected[activeCategory];
+    selected[activeCategory] || defaultSelected[activeCategory];
 
   const rawValue = currentData[currentSelected] || 0;
   const selectedValue = rawValue < 0.01 ? 0 : rawValue;
   const displayValue = selectedValue === 0 ? 0.0001 : selectedValue;
 
+  // ---------------- ANIMATION ----------------
   useEffect(() => {
     let timeout: ReturnType<typeof setTimeout>;
 
     if (selectedValue === 0) {
-      timeout = setTimeout(() => {
-        setIsZero(true);
-      }, 700);
+      timeout = setTimeout(() => setIsZero(true), 700);
     } else {
-      timeout = setTimeout(() => {
-        setIsZero(false);
-      }, 0);
+      timeout = setTimeout(() => setIsZero(false), 0);
     }
 
     return () => clearTimeout(timeout);
   }, [selectedValue]);
 
+  // 🚨 NOW it's safe to block render
   if (!data) return null;
 
   const sortedEntries = Object.entries(currentData).sort((a, b) => b[1] - a[1]);
@@ -156,7 +161,8 @@ export default function SummaryPage() {
           md:top-50 
           md:min-w-40
           md:bottom-50 mt-6 mx-6 lg:mx-0 
-          flex-1 min-h-90 sm:min-h-105 
+          flex-1 min-h-90 sm:min-h-105
+          h-140
           max-h-150
           bg-[#F3F3F3] border-t pt-8
         "
@@ -214,7 +220,7 @@ export default function SummaryPage() {
           md:w-60 lg:w-75 
           mt-6 mx-6 lg:mx-0 
           bg-[#F3F3F3] border-t pt-6
-          max-h-150
+          max-h-140
         "
         >
           <div className="flex justify-between mx-3 text-[12px] mb-4">
