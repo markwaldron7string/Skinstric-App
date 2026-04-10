@@ -93,6 +93,7 @@ export default function SelectPage() {
           max-[768px]:scale-90
           max-[640px]:scale-80
           max-[418px]:scale-70
+          max-[418px]:bottom-24
           max-[366px]:scale-60
           max-[314px]:scale-55
           max-[324px]:-translate-y-12
@@ -193,6 +194,7 @@ export default function SelectPage() {
             max-[418px]:order-1
             max-[418px]:flex-col
             max-[418px]:-translate-y-2
+            max-[524px]:bottom-4
           "
         >
           <div className="w-8 h-8 border rotate-45 flex items-center justify-center transition-transform group-hover:scale-110">

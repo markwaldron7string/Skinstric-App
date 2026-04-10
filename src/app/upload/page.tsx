@@ -321,6 +321,7 @@ function UploadPageContent() {
         max-[640px]:left-1/2
         max-[640px]:-translate-x-1/2
         max-[640px]:bottom-20
+        max-[524px]:bottom-8
         text-black
       "
       >

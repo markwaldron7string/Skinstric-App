@@ -121,6 +121,8 @@ export default function SummaryPage() {
           md:absolute md:left-16 md:top-50
           flex md:flex-col lg:mt-6 max-[411px]:flex-col 
           gap-4 px-6 mt-6
+          max-[1024px]:mt-0
+          max-[768px]:mt-6
         "
         >
           {(["race", "age", "gender"] as const).map((cat) => {
@@ -164,7 +166,10 @@ export default function SummaryPage() {
           flex-1 min-h-90 sm:min-h-105
           h-140
           max-h-150
+          max-[1024px]:max-h-120
+          max-[1024px]:mt-0
           bg-[#F3F3F3] border-t pt-8
+          max-[768px]:mt-6
         "
         >
           <h2 className="text-[36px] mb-8 ml-8 capitalize max-[444]:text-[24px] max-[200px]:text-[18px]">
@@ -221,6 +226,9 @@ export default function SummaryPage() {
           mt-6 mx-6 lg:mx-0 
           bg-[#F3F3F3] border-t pt-6
           max-h-140
+          max-[1024px]:max-h-120
+          max-[1024px]:mt-0
+          max-[768px]:mt-6
         "
         >
           <div className="flex justify-between mx-3 text-[12px] mb-4">
@@ -268,7 +276,12 @@ export default function SummaryPage() {
 
       {/* BOTTOM AREA */}
       <div className="mt-auto">
-        <div className="lg:absolute flex-center text-center text-[14px] text-gray-500 mb-2 md:bottom-8 md:left-1/2 lg:-translate-x-1/2 max-[324px]:text-[12px]">
+        <div className="
+          lg:absolute flex-center 
+          text-center text-[14px] text-gray-500 
+          mb-2 md:bottom-8 md:left-1/2 lg:-translate-x-1/2 
+          max-[324px]:text-[12px]
+        ">
           If A.I. estimate is wrong, select the correct one.
         </div>
 
