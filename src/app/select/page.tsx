@@ -93,7 +93,7 @@ export default function SelectPage() {
           max-[768px]:scale-90
           max-[640px]:scale-80
           max-[418px]:scale-70
-          max-[418px]:bottom-24
+          max-[418px]:bottom-18
           max-[366px]:scale-60
           max-[314px]:scale-55
           max-[324px]:-translate-y-12

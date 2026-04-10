@@ -114,6 +114,7 @@ function UploadPageContent() {
           max-[640px]:left-1/2
           max-[640px]:-translate-x-1/2
           max-[640px]:bottom-20
+          max-[524px]:bottom-12
         "
           >
             {/* DESKTOP */}
@@ -180,6 +181,7 @@ function UploadPageContent() {
           max-[886px]:gap-20
           max-[886px]:mb-12
           max-[640px]:gap-5
+          max-[524px]:gap-0
         "
         >
           {/* CAMERA */}
