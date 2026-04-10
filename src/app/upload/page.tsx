@@ -110,12 +110,12 @@ function UploadPageContent() {
           {/* BACK BUTTON */}
           <div
             className="
-          absolute left-16 bottom-16
-          max-[640px]:left-1/2
-          max-[640px]:-translate-x-1/2
-          max-[640px]:bottom-20
-          max-[524px]:bottom-12
-        "
+              absolute left-16 bottom-16
+              max-[640px]:left-1/2
+              max-[640px]:-translate-x-1/2
+              max-[640px]:bottom-20
+              max-[524px]:hidden
+            "
           >
             {/* DESKTOP */}
             <div

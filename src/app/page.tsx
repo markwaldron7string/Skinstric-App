@@ -156,8 +156,8 @@ export default function Home() {
             viewBox="0 0 520 520"
             className="absolute"
             style={{
-              width: "clamp(360px, 90vw, 620px)",
-              height: "clamp(360px, 90vw, 620px)",
+              width: "clamp(380px, 90vw, 620px)",
+              height: "clamp(380px, 90vw, 620px)",
             }}
           >
             <path
@@ -175,8 +175,8 @@ export default function Home() {
             viewBox="0 0 420 420"
             className="absolute"
             style={{
-              width: "clamp(300px, 75vw, 520px)",
-              height: "clamp(300px, 75vw, 520px)",
+              width: "clamp(320px, 75vw, 520px)",
+              height: "clamp(320px, 75vw, 520px)",
             }}
           >
             <path
@@ -283,7 +283,7 @@ export default function Home() {
         <div
           onMouseEnter={() => setHovered("left")}
           onMouseLeave={() => setHovered(null)}
-          className={`absolute left-24 top-1/2 -translate-y-1/2 flex items-center gap-4 cursor-pointer ${
+          className={`absolute left-24 top-1/2 -translate-y-1/2 flex items-center gap-4 cursor-not-allowed ${
             hovered === "right" ? "opacity-0" : "opacity-100"
           }`}
         >
