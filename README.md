@@ -1,126 +1,44 @@
-## 🧴 Skinstric – AI Skincare Analysis Experience
+# Skinstric App
 
-This is an interactive web application that simulates an AI-powered skincare analysis experience. Users are guided through a multi-step flow where they input personal data, capture or upload an image, and receive a dynamic “AI analysis” of demographic attributes such as age, race, and gender.
+An interactive AI skincare analysis experience built as a multi-step product flow with image capture, upload, and demographic result views.
 
-The project emphasizes smooth UI transitions, responsive design, and a polished, modern user experience inspired by high-end product interfaces.
+**Live demo:** [skinstric-app-tau.vercel.app](https://skinstric-app-tau.vercel.app)
 
----
+![Skinstric App screenshot](docs/screenshot.png)
 
-## 🚀 Features
+## What It Does
 
-* **Multi-step user flow**
+Skinstric App guides users through a stylized analysis journey:
 
-  * Landing page → Form → Upload/Capture → Analysis Summary
+- Intro screen with animated diamond interactions and directional calls to action.
+- Name and city onboarding form with validation and loading states.
+- Camera capture and image upload paths.
+- API-backed image analysis flow using the provided Skinstric cloud functions.
+- Demographics selection screen for race, age, and gender estimates.
+- Summary page with animated percentage visualization and editable category selections.
+- Local storage handoff between steps for a smooth client-side experience.
 
-* **AI-style analysis visualization**
+## Tech Stack
 
-  * Dynamic percentage circle with animated transitions
-  * Category switching (race, age, gender)
-  * Sorted confidence breakdown panel
+- Next.js 16 App Router
+- React 19
+- TypeScript
+- Tailwind CSS v4
+- React Hooks
+- Browser media APIs
+- React Icons
+- Fetch API
+- Vercel for deployment
 
-* **Camera & image upload**
-
-  * Device camera integration
-  * Image preview and confirmation flow
-  * Local storage persistence between pages
-
-* **Advanced UI/UX interactions**
-
-  * Custom hover animations (expanding diamond, pulse effects)
-  * Smooth transitions and easing curves
-  * Responsive layout across desktop and mobile
-
-* **State persistence**
-
-  * Analysis data stored in `localStorage`
-  * Seamless handoff between routes
-
----
-
-## 🛠 Tech Stack
-
-* **Framework:** Next.js (App Router)
-* **Language:** TypeScript
-* **Styling:** Tailwind CSS
-* **Icons:** React Icons
-* **State Management:** React Hooks (`useState`, `useEffect`)
-* **Deployment:** Vercel
-
----
-
-## 🧠 Key Implementation Details
-
-* **Hydration-safe data loading**
-
-  * Client-only data (`localStorage`) is accessed within `useEffect` to prevent SSR mismatches.
-
-* **Derived state handling**
-
-  * Default selections are computed dynamically instead of being redundantly stored in state.
-
-* **Animation handling**
-
-  * SVG stroke manipulation (`strokeDashoffset`) is used for the circular progress animation.
-  * Edge cases (e.g., 0%) are handled to prevent rendering artifacts.
-
-* **Responsive design strategy**
-
-  * Layout shifts from absolute positioning (desktop) to stacked flex layouts (mobile)
-  * Uses `clamp()` and Tailwind breakpoints for fluid scaling
-
----
-
-## 📱 Responsiveness
-
-The application is optimized for:
-
-* Desktop (primary experience)
-* Tablet
-* Mobile (including small-width devices)
-
-Special care was taken to:
-
-* Prevent overflow issues
-* Maintain visual hierarchy
-* Ensure interactive elements remain accessible
-
----
-
-## ⚠️ Notes
-
-* AI analysis is simulated for demonstration purposes
-* No real image processing or ML model is used
-
----
-
-## 📦 Getting Started
+## Run Locally
 
 ```bash
 npm install
 npm run dev
 ```
 
-Then open:
+Then open [http://localhost:3000](http://localhost:3000).
 
-```
-http://localhost:3000
-```
+## Project Status
 
----
-
-## 🌐 Deployment
-
-The project is deployed on Vercel and optimized for production using:
-
-```bash
-npm run build
-```
-
----
-
-## ✨ Future Improvements
-
-* Integrate real AI/ML image analysis
-* Add user authentication
-* Store results in a database
-* Enhance animation system with Framer Motion
+This project focuses on high-polish interface motion, responsive layouts, and a guided AI-analysis flow. Future improvements could include authentication, persisted user history, and richer result explanations.
