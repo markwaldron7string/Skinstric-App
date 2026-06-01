@@ -17,8 +17,11 @@ export default function FormPage() {
 
   const isValid = (val: string) => /^[a-zA-Z\s]+$/.test(val.trim());
 
-  const handleEnter = async (e: React.KeyboardEvent) => {
-    if (e.key !== "Enter") return;
+  const handleSubmit = async () => {
+    if (!value.trim()) {
+      setError("Please enter a value");
+      return;
+    }
 
     if (!isValid(value)) {
       setError("Only letters allowed");
@@ -67,10 +70,14 @@ export default function FormPage() {
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") handleSubmit();
+  };
+
   return (
     <div className="w-full h-[calc(100vh-64px)] bg-white relative flex items-center justify-center">
       {/* CENTER WRAPPER */}
-      <div className="relative flex flex-col items-center text-center -translate-y-20">
+      <div className="relative flex flex-col items-center text-center -translate-y-12 sm:-translate-y-16 md:-translate-y-20 w-full px-4">
         {/* ================= DIAMONDS ================= */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <div className="absolute animate-spin-outer opacity-30 scale-[0.4] min-[480px]:scale-[0.5] sm:scale-[0.7] md:scale-100">
@@ -99,7 +106,8 @@ export default function FormPage() {
           <InputBlock
             value={value}
             setValue={setValue}
-            handleEnter={handleEnter}
+            handleKeyDown={handleKeyDown}
+            onSubmit={handleSubmit}
             placeholder="Introduce Yourself"
             width="75%"
           />
@@ -110,7 +118,8 @@ export default function FormPage() {
           <InputBlock
             value={value}
             setValue={setValue}
-            handleEnter={handleEnter}
+            handleKeyDown={handleKeyDown}
+            onSubmit={handleSubmit}
             placeholder="your city name"
             width="62%"
           />
@@ -194,14 +203,8 @@ export default function FormPage() {
       <div
         className="
         sm:hidden
-        absolute bottom-6 left-0 w-full px-6
+        absolute bottom-6 left-0 w-full px-8
         flex justify-between items-center
-        max-[640px]:flex-col
-        max-[640px]:bottom-14
-        max-[640px]:gap-5
-        max-[324px]:justify-center
-        max-[324px]:gap-4
-        max-[324px]:bottom-19
       "
       >
         <MobileButton label="BACK" onClick={() => router.back()} />
@@ -221,14 +224,16 @@ export default function FormPage() {
 type InputBlockProps = {
   value: string;
   setValue: (val: string) => void;
-  handleEnter: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  handleKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  onSubmit: () => void;
   placeholder: string;
   width: string;
 };
 function InputBlock({
   value,
   setValue,
-  handleEnter,
+  handleKeyDown,
+  onSubmit,
   placeholder,
   width,
 }: InputBlockProps) {
@@ -239,10 +244,10 @@ function InputBlock({
         placeholder={placeholder}
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        onKeyDown={handleEnter}
+        onKeyDown={handleKeyDown}
         className="
           w-full
-          text-[clamp(28px,6vw,56px)]
+          text-[clamp(22px,5vw,56px)]
           text-center
           text-[#1A1B1C]
           placeholder:text-[#9CA3AF]
@@ -258,6 +263,22 @@ function InputBlock({
       />
 
       <div className="h-px bg-[#c3cad1]" style={{ width }} />
+
+      {/* ENTER BUTTON */}
+      <button
+        onClick={onSubmit}
+        className="
+          mt-4 flex items-center gap-2.5
+          text-[11px] tracking-[0.14em] text-[#1A1B1C]
+          cursor-pointer hover:opacity-60 transition-opacity duration-200
+          select-none
+        "
+      >
+        <span>ENTER</span>
+        <div className="w-6 h-6 border rotate-45 flex items-center justify-center">
+          <RiPlayFill className="-rotate-45 text-[12px]" />
+        </div>
+      </button>
     </div>
   );
 }
@@ -293,7 +314,7 @@ function MobileButton({ label, onClick }: MobileButtonProps) {
         >
           <span
             className="
-            -rotate-45 text-[11px]
+            -rotate-45 text-[10px]
             text-[#1A1B1C]
             transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]
             group-hover:scale-110

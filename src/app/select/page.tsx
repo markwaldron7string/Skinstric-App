@@ -168,34 +168,24 @@ export default function SelectPage() {
         </div>
       </div>
 
-      {/* BACK */}
+      {/* BOTTOM NAV */}
       <div
         className="
-        absolute left-0 bottom-16 
+        absolute left-0 bottom-0
         text-black
         w-full
-        flex justify-between px-16
-        max-[418px]:left-1/2 
-        max-[418px]:-translate-x-1/2
-        max-[418px]:w-auto
+        flex justify-between items-center
+        px-8 sm:px-16 py-6 sm:py-0
+        sm:bottom-16
         max-[418px]:flex-col
-        max-[418px]:items-center
-        max-[418px]:gap-8
-        max-[418px]:px-0
-        max-[418px]:scale-90
-        max-[366px]:scale-75
+        max-[418px]:gap-6
+        max-[418px]:bottom-4
       "
       >
         {/* BACK */}
         <div
           onClick={() => router.back()}
-          className="
-            flex items-center gap-3 cursor-pointer group
-            max-[418px]:order-1
-            max-[418px]:flex-col
-            max-[418px]:-translate-y-2
-            max-[524px]:bottom-4
-          "
+          className="flex items-center gap-3 cursor-pointer group min-h-[44px]"
         >
           <div className="w-8 h-8 border rotate-45 flex items-center justify-center transition-transform group-hover:scale-110">
             <span className="-rotate-45 text-[20px]">
@@ -208,13 +198,7 @@ export default function SelectPage() {
         {/* GET SUMMARY */}
         <div
           onClick={() => router.push("/summary")}
-          className="
-            flex items-center gap-3 cursor-pointer group
-            max-[418px]:order-2
-            max-[418px]:flex-col-reverse
-            max-[418px]:-translate-y-2
-            animate-text-pulse
-          "
+          className="flex items-center gap-3 cursor-pointer group animate-text-pulse min-h-[44px]"
         >
           <span className="text-[12px] tracking-[0.08em] pr-2">
             GET SUMMARY

@@ -175,13 +175,13 @@ function UploadPageContent() {
           lg:w-225
           lg:mb-40
           max-[1094px]:w-197.5
-          
+
           /* STACK AT 886px */
           max-[886px]:flex-col
-          max-[886px]:gap-20
+          max-[886px]:gap-16
           max-[886px]:mb-12
-          max-[640px]:gap-5
-          max-[524px]:gap-0
+          max-[640px]:gap-8
+          max-[524px]:gap-4
         "
         >
           {/* CAMERA */}
@@ -228,7 +228,7 @@ function UploadPageContent() {
             </div>
 
             {/* MOBILE TEXT (≤524px) */}
-            <div className="hidden max-[524px]:block pointer-events-none absolute mb-42 font-bold text-center w-full">
+            <div className="hidden max-[524px]:block pointer-events-none absolute -top-16 font-bold text-center w-full">
               <p className="text-[11px] tracking-[0.12em] text-gray-600">
                 ALLOW A.I.
                 <br />
@@ -280,7 +280,7 @@ function UploadPageContent() {
             </div>
 
             {/* MOBILE TEXT (≤524px) */}
-            <div className="hidden max-[524px]:block pointer-events-none font-bold absolute mt-42 text-center w-full">
+            <div className="hidden max-[524px]:block pointer-events-none font-bold absolute -bottom-16 text-center w-full">
               <p className="text-[11px] tracking-[0.12em] text-gray-600">
                 ALLOW A.I.
                 <br />
@@ -341,7 +341,7 @@ function UploadPageContent() {
         </div>
 
         {/* MOBILE */}
-        <div className="sm:hidden text-gray-200">
+        <div className="sm:hidden text-[#1A1B1C]">
           <div className="relative w-16 h-16 flex items-center justify-center">
             {/* OUTER */}
             <div className="absolute animate-spin-outer opacity-20">

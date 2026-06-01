@@ -80,7 +80,6 @@ export default function SummaryPage() {
     return () => clearTimeout(timeout);
   }, [selectedValue]);
 
-  // 🚨 NOW it's safe to block render
   if (!data) return null;
 
   const sortedEntries = Object.entries(currentData).sort((a, b) => b[1] - a[1]);
@@ -99,30 +98,35 @@ export default function SummaryPage() {
   };
 
   return (
-    <div className="w-full h-[calc(100vh-64px)] bg-white relative flex flex-col">
+    <div className="w-full min-h-[calc(100vh-64px)] bg-white relative flex flex-col">
       {/* HEADER */}
-      <div className="text-black md:absolute md:top-6 md:left-16 px-6 pt-6 lg:px-0 lg:pt-0 max-[234px]:text-center">
-        <p className="text-[12px] font-semibold tracking-[0.12em] mb-2 max-[234px]:text-[9px]">
+      <div className="text-black md:absolute md:top-6 md:left-16 px-6 pt-5 lg:px-0 lg:pt-0 max-[234px]:text-center">
+        <p className="text-[11px] font-semibold tracking-[0.12em] mb-1.5 max-[234px]:text-[9px]">
           A.I. ANALYSIS
         </p>
-        <h1 className="text-[42px] lg:text-[72px] max-[376px]:text-[24px] max-[234px]:font-semibold max-[234px]:text-[16px] leading-none">
+        <h1 className="text-[32px] lg:text-[72px] max-[376px]:text-[22px] max-[234px]:font-semibold max-[234px]:text-[16px] leading-none">
           DEMOGRAPHICS
         </h1>
-        <p className="text-[12px] mt-2 text-gray-600 max-[234px]:text-[9px]">
+        <p className="text-[11px] mt-1.5 text-gray-600 max-[234px]:text-[9px]">
           PREDICTED RACE & AGE
         </p>
       </div>
 
       {/* CONTENT AREA */}
-      <div className="flex-1 flex flex-col text-black overflow-y-auto md:block">
-        {/* LEFT PANEL */}
+      <div className="flex-1 flex flex-col text-black md:block">
+
+        {/* LEFT PANEL — category tabs */}
         <div
           className="
           md:absolute md:left-16 md:top-50
-          flex md:flex-col lg:mt-6 max-[411px]:flex-col 
-          gap-4 px-6 mt-6
+          flex md:flex-col
+          gap-2 px-6 mt-4
+          overflow-x-auto
+          max-[411px]:flex-col
+          max-[411px]:gap-2
+          lg:mt-6
           max-[1024px]:mt-0
-          max-[768px]:mt-6
+          max-[768px]:mt-4
         "
         >
           {(["race", "age", "gender"] as const).map((cat) => {
@@ -135,15 +139,15 @@ export default function SummaryPage() {
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
                 className={`
-                  w-35 sm:w-45 p-3 sm:p-4 max-[411px]:w-full border cursor-pointer
+                  min-w-[120px] sm:w-45 p-3 sm:p-4 border cursor-pointer flex-shrink-0
                   ${
                     activeCategory === cat
                       ? "bg-black text-white"
-                      : "bg-white text-black"
+                      : "bg-white text-black hover:bg-gray-50"
                   }
                 `}
               >
-                <p className="text-[14px] capitalize">{value}</p>
+                <p className="text-[13px] capitalize truncate">{value}</p>
                 <p className="text-[10px] tracking-[0.12em] mt-1">
                   {cat.toUpperCase()}
                 </p>
@@ -152,33 +156,32 @@ export default function SummaryPage() {
           })}
         </div>
 
-        {/* CENTER */}
+        {/* CENTER — progress circle */}
         <div
           className="
           md:absolute
-          md:left-65 
-          md:right-80 
-          lg:left-75 
+          md:left-65
+          md:right-80
+          lg:left-75
           lg:right-100
-          md:top-50 
+          md:top-50
           md:min-w-40
-          md:bottom-50 mt-6 mx-6 lg:mx-0 
-          flex-1 min-h-90 sm:min-h-105
-          h-140
-          max-h-150
-          max-[1024px]:max-h-120
+          md:bottom-50
+          mt-4 mx-6 lg:mx-0
+          flex-1
+          min-h-[220px]
           max-[1024px]:mt-0
-          bg-[#F3F3F3] border-t pt-8
-          max-[768px]:mt-6
+          bg-[#F3F3F3] border-t pt-6
+          max-[768px]:mt-4
         "
         >
-          <h2 className="text-[36px] mb-8 ml-8 capitalize max-[444]:text-[24px] max-[200px]:text-[18px]">
+          <h2 className="text-[28px] sm:text-[36px] mb-4 ml-6 capitalize max-[200px]:text-[18px]">
             {currentSelected}
           </h2>
 
           {/* CIRCLE */}
-          <div className="flex justify-end items-end h-full pr-4 pb-24 max-[324px]:pb-24">
-            <div className="relative w-[clamp(180px,30vw,420px)] h-[clamp(180px,30vw,420px)]">
+          <div className="flex justify-end items-end h-full pr-4 pb-16 sm:pb-24">
+            <div className="relative w-[clamp(140px,28vw,380px)] h-[clamp(140px,28vw,380px)]">
               <svg viewBox="0 0 480 480" className="w-full h-full -rotate-90">
                 <circle
                   cx={center}
@@ -210,34 +213,33 @@ export default function SummaryPage() {
                 />
               </svg>
 
-              <div className="absolute inset-0 flex items-center justify-center text-[20px] lg:text-[32px]">
+              <div className="absolute inset-0 flex items-center justify-center text-[18px] lg:text-[30px]">
                 {(selectedValue * 100).toFixed(0)}%
               </div>
             </div>
           </div>
         </div>
 
-        {/* RIGHT PANEL */}
+        {/* RIGHT PANEL — values list */}
         <div
           className="
-          md:absolute md:right-16 
-          md:top-50 md:bottom-30 
-          md:w-60 lg:w-75 
-          mt-6 mx-6 lg:mx-0 
-          bg-[#F3F3F3] border-t pt-6
-          max-h-140
-          max-[1024px]:max-h-120
+          md:absolute md:right-16
+          md:top-50 md:bottom-30
+          md:w-60 lg:w-75
+          mt-4 mx-6 lg:mx-0
+          bg-[#F3F3F3] border-t pt-4
           max-[1024px]:mt-0
-          max-[768px]:mt-6
+          max-[768px]:mt-4
+          mb-4 md:mb-0
         "
         >
-          <div className="flex justify-between mx-3 text-[12px] mb-4">
+          <div className="flex justify-between mx-3 text-[11px] mb-3">
             <span>{activeCategory.toUpperCase()}</span>
             <span>A.I. CONFIDENCE</span>
           </div>
 
           {sortedEntries.map(([key, value]) => {
-            const displayValue = value < 0.01 ? 0 : value;
+            const dv = value < 0.01 ? 0 : value;
 
             return (
               <div
@@ -249,7 +251,7 @@ export default function SummaryPage() {
                   }))
                 }
                 className={`
-                  flex items-center justify-between px-3 py-2 cursor-pointer
+                  flex items-center justify-between px-3 py-2.5 cursor-pointer
                   ${
                     currentSelected === key
                       ? "bg-black text-white"
@@ -258,16 +260,16 @@ export default function SummaryPage() {
                 `}
               >
                 <div className="flex items-center gap-2">
-                  <div className="w-2.5 h-2.5 border rotate-45 flex items-center justify-center">
+                  <div className="w-2.5 h-2.5 border rotate-45 flex items-center justify-center flex-shrink-0">
                     {currentSelected === key && (
                       <div className="w-1.5 h-1.5 bg-white rotate-90" />
                     )}
                   </div>
 
-                  <span className="capitalize">{key}</span>
+                  <span className="capitalize text-[13px]">{key}</span>
                 </div>
 
-                <span>{(displayValue * 100).toFixed(0)}%</span>
+                <span className="text-[13px]">{(dv * 100).toFixed(0)}%</span>
               </div>
             );
           })}
@@ -275,21 +277,16 @@ export default function SummaryPage() {
       </div>
 
       {/* BOTTOM AREA */}
-      <div className="mt-auto">
-        <div className="
-          lg:absolute flex-center 
-          text-center text-[14px] text-gray-500 
-          mb-2 md:bottom-8 md:left-1/2 lg:-translate-x-1/2 
-          max-[324px]:text-[12px]
-        ">
+      <div className="mt-auto px-6 pb-6 md:pb-0">
+        <p className="text-center text-[12px] text-gray-500 mb-4 md:absolute md:bottom-8 md:left-1/2 md:-translate-x-1/2">
           If A.I. estimate is wrong, select the correct one.
-        </div>
+        </p>
 
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 px-6 md:absolute md:left-16 md:right-16 md:bottom-16 md:px-0">
+        <div className="flex justify-between items-center md:absolute md:left-16 md:right-16 md:bottom-16 md:px-0">
           {/* BACK */}
           <div
             onClick={() => router.back()}
-            className="flex items-center gap-3 mt-1 text-black cursor-pointer group max-[768px]:mb-3 max-[768px]:mx-4"
+            className="flex items-center gap-3 text-black cursor-pointer group"
           >
             <div className="w-8 h-8 border rotate-45 flex items-center justify-center group-hover:scale-110 transition">
               <span className="-rotate-45 text-[20px]">
@@ -299,18 +296,18 @@ export default function SummaryPage() {
             <span className="text-[12px] pl-2 tracking-[0.08em]">BACK</span>
           </div>
 
-          {/* BUTTONS */}
-          <div className="flex gap-3 max-[768px]:mb-3">
+          {/* RESET / CONFIRM */}
+          <div className="flex gap-3">
             <button
               onClick={handleReset}
-              className="px-6 py-2 border text-gray-300 text-[12px] cursor-pointer"
+              className="px-5 py-2.5 border text-gray-400 text-[12px] cursor-pointer hover:text-gray-600 transition min-h-[44px]"
             >
               RESET
             </button>
 
             <button
               onClick={() => router.push("/")}
-              className="px-6 py-2 bg-black text-white text-[12px] cursor-pointer"
+              className="px-5 py-2.5 bg-black text-white text-[12px] cursor-pointer hover:opacity-80 transition min-h-[44px]"
             >
               CONFIRM
             </button>
